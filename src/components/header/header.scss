@@ -1,0 +1,60 @@
+@use '../../sass/style.scss' as *;
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 10px 60px;
+    background-color: #fff;
+    box-shadow: $box-shadow;
+    z-index: 99;
+
+    &__main {
+        height: $header-height;
+
+        &__item:hover &__subnav {
+            opacity: 1;
+            visibility: visible;
+            top: 100%;
+            transition: all 0.3s 0s ease;
+        }
+
+        &__subnav {
+            width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            top: calc(100% + 20px);
+            transition: all 0.3s 0s ease;
+            a:hover {
+                color: $primary-color;
+                transition: color 0.3s 0s ease;
+            }
+        }
+
+        &__control {
+            font-size: 22px;
+            &__user {
+                // @include square-div-with-background();
+            }
+
+            &__cart {
+                position: relative;
+                &__number {
+                    @include flex(center, center);
+                    position: absolute;
+                    top: -12px;
+                    right: -12px;
+                    line-height: 1;
+                    width: 24px;
+                    height: 24px;
+                    font-size: 10px;
+                    color: #fff;
+                    border: 2px solid transparent;
+                    // width: 40px;
+                    // height: 40px;
+                    background-color: $primary-color;
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+}

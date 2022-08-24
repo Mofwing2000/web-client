@@ -1,0 +1,131 @@
+@use '../../sass/style.scss' as *;
+
+.product-profile {
+    &__main {
+        &__gallery {
+            &__slider {
+                .swiper-slide {
+                    opacity: 0.6;
+                }
+                .swiper-slide-thumb-active {
+                    opacity: 1;
+                    border: 1px solid rgb(79, 79, 79);
+                }
+                &__item {
+                    width: 100%;
+                    &__container {
+                        @include square-div-with-background();
+                    }
+                }
+            }
+        }
+
+        &__info {
+            &__title {
+                font-weight: 800;
+                margin-bottom: 24px;
+            }
+            &__price {
+                margin-bottom: 16px;
+                font-size: 30px;
+            }
+            &__quantity {
+                margin-bottom: 16px;
+                &__label {
+                    font-weight: 700;
+                }
+            }
+            &__color {
+                margin-bottom: 16px;
+                &__item {
+                    // width: 20px;
+                    // height: 20px;
+                    font-size: 22px;
+                    display: inline-flex;
+                    margin-right: 10px;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 1px;
+                    border: 1px solid rgba($color: $gray-color, $alpha: 0.3);
+                    border-radius: 50%;
+                    cursor: pointer;
+                    &.active {
+                        border: solid 3px $primary-color;
+                    }
+                }
+            }
+            &__size {
+                &__item {
+                    width: 50px;
+                    height: 34px;
+                    display: inline-flex;
+                    justify-content: center;
+                    align-items: center;
+                    // padding: 2px 4px;
+                    border: 1px solid rgba($color: $gray-color, $alpha: 0.8);
+                    border-radius: 2px;
+                    cursor: pointer;
+                    &.out-stock {
+                        opacity: 0.2;
+                    }
+
+                    &.active {
+                        border: solid 3px $primary-color;
+                    }
+                }
+            }
+
+            &__quantity-edit {
+                @include flex(center, unset);
+                .number-input {
+                    height: 36px;
+                    border: solid 1px $gray-color;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    background-color: inherit;
+                    color: inherit;
+                }
+                input[type='number']::-webkit-inner-spin-button,
+                input[type='number']::-webkit-outer-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+                .number-plus {
+                    height: 36px;
+                    width: 36px;
+                    border: solid 1px $gray-color;
+                    border-left: none;
+                    cursor: pointer;
+                    font-size: 24px;
+                    line-height: 1;
+                }
+                .number-minus {
+                    height: 36px;
+                    width: 36px;
+                    border: solid 1px $gray-color;
+                    border-right: none;
+                    cursor: pointer;
+                    font-size: 24px;
+                    line-height: 1;
+                }
+            }
+
+            &__description {
+                &__label {
+                    font-weight: 700;
+                }
+                pre {
+                    margin-top: 40px;
+                    font-size: 16px;
+                    font-family: inherit;
+                    overflow-x: auto;
+                    white-space: pre-wrap;
+                    white-space: -moz-pre-wrap;
+                    white-space: -pre-wrap;
+                    white-space: -o-pre-wrap;
+                    word-wrap: break-word;
+                }
+            }
+        }
+    }
+}

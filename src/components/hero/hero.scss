@@ -1,0 +1,26 @@
+.hero {
+    &__swiper {
+        height: 800px;
+        position: relative;
+        // &::after {
+        //     content: '';
+        //     display: absolute;
+        //     top: 0;
+        //     left: 0;
+        //     height: 800px;
+        //     width: 100%;
+        //     background-color: rgba(0, 0, 0, 0.6);
+        // }
+        &__item {
+            background-position: top center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            padding-top: 220px;
+            height: 100%;
+        }
+    }
+
+    &__social {
+        top: 90%;
+    }
+}
