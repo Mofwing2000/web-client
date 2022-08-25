@@ -36,10 +36,12 @@ const ProductCard: FC<IProps> = (props) => {
     return (
         <div className="product-item mb-5 position-relative">
             <div className="product-item__pic">
-                <div
-                    className="product-item__pic__photo"
-                    style={{ backgroundImage: `url(${product.photoUrls[0]}), url(${defaultPhotoImg})` }}
-                ></div>
+                <Link to={`/product/${product.id}`}>
+                    <div
+                        className="product-item__pic__photo"
+                        style={{ backgroundImage: `url(${product.photoUrls[0]}), url(${defaultPhotoImg})` }}
+                    ></div>
+                </Link>
             </div>
             <div className="product-item__content">
                 <Link to={`/product/${product.id}`}>
