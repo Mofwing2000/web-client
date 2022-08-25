@@ -10,6 +10,7 @@ import { selectAuth } from '../root-reducer';
 import {
     addCartAsync,
     changeQuantityCartAsync,
+    clearCartAsync,
     decreaseCartAsync,
     fetchCartAsync,
     increaseCartAsync,
@@ -139,7 +140,7 @@ async function changeQuantityCart(cartItem: CartItem, newQuantity: number, cart:
         (item) => item.id === cartItem.id && item.color === cartItem.color && item.size === cartItem.size,
     );
     const newCartItems = [...cart.cartItems];
-    newCartItems.splice(index, 1, { ...newCartItems[index], quantity: newCartItems[index].quantity + newQuantity });
+    newCartItems.splice(index, 1, { ...newCartItems[index], quantity: newQuantity });
     await updateDoc(doc(db, 'cart', cart.id), {
         cartItems: [...newCartItems],
     });
@@ -198,10 +199,37 @@ function* decreaseCartGen(action: ReturnType<typeof decreaseCartAsync.request>) 
     }
 }
 
+async function clearCart(cart: Cart) {
+    await updateDoc(doc(db, 'cart', cart.id), {
+        cartItems: [],
+    });
+    return {
+        ...cart,
+        cartItems: [],
+    };
+}
+
+function* clearCartGen() {
+    try {
+        const { cart }: ReturnType<typeof selectCart> = yield select(selectCart);
+        if (cart) {
+            const cartData: Cart = yield call(clearCart, cart);
+            yield put(clearCartAsync.success(cartData));
+        }
+    } catch (error) {
+        if (error instanceof FirebaseError) {
+            toast.error(error.message);
+            yield put(clearCartAsync.failure(error.message));
+        }
+    }
+}
+
 export function* cartSaga() {
     yield takeEvery(fetchCartAsync.request, fetchCartGen);
     yield takeEvery(addCartAsync.request, addCartGen);
     yield takeEvery(removeCartAsync.request, removeCartGen);
     yield takeLatest(increaseCartAsync.request, increaseCartGen);
     yield takeLatest(decreaseCartAsync.request, decreaseCartGen);
+    yield takeLatest(changeQuantityCartAsync.request, changeQuantityCartGen);
+    yield takeLatest(clearCartAsync.request, clearCartGen);
 }
