@@ -1,13 +1,13 @@
 @use '../../sass/style.scss' as *;
 .header {
-    position: fixed;
     top: 0;
     width: 100%;
     padding: 10px 60px;
     background-color: #fff;
     box-shadow: $box-shadow;
     z-index: 99;
-
+    position: relative;
+    transition: color 0.3s 0s ease;
     &__main {
         height: $header-height;
 
@@ -54,6 +54,94 @@
                     background-color: $primary-color;
                     border-radius: 50%;
                 }
+            }
+        }
+        &__burger {
+            @include flex(center, center);
+            padding: 0;
+            text-align: center;
+            width: 44px;
+            height: 44px;
+            border: 1px solid $para-color;
+            font-size: 30px;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+
+    &__nav__control--dropdown__menu {
+        width: 240px;
+    }
+    &--mobile {
+        position: fixed;
+        top: 0;
+        left: 0;
+        visibility: hidden;
+        opacity: 0;
+        z-index: 999;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba($color: #000000, $alpha: 0.7);
+        transition: all 0s 0.5s ease;
+        &.show {
+            visibility: visible;
+            opacity: 1;
+            .header--mobile__main {
+                transform: translateX(0);
+            }
+            transition: all 0s 0s ease;
+        }
+
+        &__main {
+            position: absolute;
+            transform: translateX(-320px);
+            left: 0;
+            top: 0;
+            width: 320px;
+            height: 100%;
+            padding: 40px 20px;
+            background-color: #fff;
+            transition: all 0.5s 0s ease;
+            &__subnav {
+                width: 150px;
+                transition: all 0.3s 0s ease;
+                a:hover {
+                    color: $primary-color;
+                    transition: color 0.3s 0s ease;
+                }
+            }
+            &__control {
+                font-size: 22px;
+                &__user {
+                    // @include square-div-with-background();
+                }
+
+                &__cart {
+                    position: relative;
+                    &__number {
+                        @include flex(center, center);
+                        position: absolute;
+                        top: -12px;
+                        right: -12px;
+                        line-height: 1;
+                        width: 24px;
+                        height: 24px;
+                        font-size: 10px;
+                        color: #fff;
+                        border: 2px solid transparent;
+                        // width: 40px;
+                        // height: 40px;
+                        background-color: $primary-color;
+                        border-radius: 50%;
+                    }
+                }
+            }
+            &__close {
+                position: absolute;
+                font-size: 24px;
+                top: 6px;
+                right: 14px;
             }
         }
     }
