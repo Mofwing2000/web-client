@@ -45,5 +45,6 @@
     "alreadyHaveAccount": "Đã có tài khoản",
     "forgotPassword": "Quên mật khẩu?",
     "confirmEmailSent": "Tin nhắn xác nhận đã được gủi đến email của bạn",
-    "mustMatchPassword": "Mật khẩu không khớp"
+    "mustMatchPassword": "Mật khẩu không khớp",
+    "collection": "Bộ sưu tập"
 }

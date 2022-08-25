@@ -19,6 +19,7 @@ import Catalog from './container/catalog/Catalog';
 import Product from './container/product/Product';
 import Cart from './container/cart/Cart';
 import Checkout from './container/checkout/Checkout';
+import CollectionPage from './container/collection/CollectionPage';
 
 function App() {
     const { mode } = useAppSelector<DisplayModeState>(selectDarkMode);
@@ -35,6 +36,7 @@ function App() {
                         <Route index element={<Home />}></Route>
                         <Route path=":type" element={<Catalog />}></Route>
                         <Route path="product/:productId" element={<Product />}></Route>
+                        <Route path="collection/:collectionId" element={<CollectionPage />}></Route>
                         <Route path="about" element={<Home />}></Route>
                         <Route
                             path="shopping-cart"
