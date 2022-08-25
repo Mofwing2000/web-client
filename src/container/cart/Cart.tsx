@@ -1,14 +1,14 @@
-import { collection, query, where } from 'firebase/firestore';
-import React, { useEffect, useMemo, useState } from 'react';
+import { collection, query } from 'firebase/firestore';
+import React, { useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
 import { db } from '../../config/firebase.config';
+import { DEFAULT_PRODUCT_PHOTO_URL as defaultProductPhoto } from '../../constants/commons';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
-import { Cart, CartItem, CartState } from '../../models/cart';
-import { Bottom, ProductState, Top } from '../../models/product';
-import im from '../../assets/image/1.jpg';
+import { CartItem, CartState } from '../../models/cart';
+import { ProductState } from '../../models/product';
 import {
     changeQuantityCartAsync,
-    clearCart,
     decreaseCartAsync,
     fetchCartAsync,
     increaseCartAsync,
@@ -17,17 +17,13 @@ import {
 import { selectCart } from '../../store/cart/cart.reducer';
 import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
 import { selectProduct } from '../../store/product/product.reducer';
-import { DEFAULT_PRODUCT_PHOTO_URL as defaultProductPhoto } from '../../constants/commons';
 import './cart.scss';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 const CartPage = () => {
     const { cart, isCartLoading } = useAppSelector<CartState>(selectCart);
     const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
 
     // const [cartProducts , setCartProducts]  = useState<(Top|Bottom)[]>()
     const dispatch = useAppDispatch();
-
     const isLoading = useMemo(() => {
         return isCartLoading || isProductLoading;
     }, [isCartLoading, isProductLoading]);
@@ -66,7 +62,6 @@ const CartPage = () => {
                 newQuantity = itemInProductList.quantity - cartItemQuantity[cartItem.id];
                 e.target.value = newQuantity + '';
             } else newQuantity = +e.target.value;
-
             dispatch(changeQuantityCartAsync.request({ cartItem, newQuantity }));
         }
     };
@@ -107,7 +102,9 @@ const CartPage = () => {
                                         <span
                                             className="quantity__edit fa fa-angle-left fs-5"
                                             onClick={() => {
-                                                if (item.quantity > 1) dispatch(decreaseCartAsync.request(item));
+                                                if (item.quantity > 1) {
+                                                    dispatch(decreaseCartAsync.request(item));
+                                                }
                                             }}
                                         ></span>
                                         <input
@@ -116,7 +113,7 @@ const CartPage = () => {
                                                     ? 'text-danger'
                                                     : ''
                                             }`}
-                                            type="text"
+                                            type="number"
                                             value={item.quantity}
                                             onChange={(e) => handleQuantityChange(e, item)}
                                         />
