@@ -47,7 +47,7 @@ const CartPage = () => {
         }
     }, [cartProducts]);
 
-    const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>, cartItem: CartItem) => {
+    const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>, cartItem: CartItem, oldQuantity: number) => {
         if (cartProducts) {
             let newQuantity: number;
             const itemInProductList = cartProducts.find((product) => product.id === cartItem.id);
@@ -59,7 +59,7 @@ const CartPage = () => {
                 itemInProductList &&
                 +e.target.value > itemInProductList.quantity - cartItemQuantity[cartItem.id]
             ) {
-                newQuantity = itemInProductList.quantity - cartItemQuantity[cartItem.id];
+                newQuantity = itemInProductList.quantity - cartItemQuantity[cartItem.id] + oldQuantity;
                 e.target.value = newQuantity + '';
             } else newQuantity = +e.target.value;
             dispatch(changeQuantityCartAsync.request({ cartItem, newQuantity }));
@@ -115,14 +115,15 @@ const CartPage = () => {
                                             }`}
                                             type="number"
                                             value={item.quantity}
-                                            onChange={(e) => handleQuantityChange(e, item)}
+                                            onChange={(e) => handleQuantityChange(e, item, item.quantity)}
                                         />
                                         <span
                                             className="quantity__edit fa fa-angle-right fs-5"
                                             onClick={() => {
                                                 if (
                                                     cartItem &&
-                                                    item.quantity < cartItem.quantity - cartItemQuantity[item.id]
+                                                    item.quantity <
+                                                        cartItem.quantity - cartItemQuantity[item.id] + item.quantity
                                                 )
                                                     dispatch(increaseCartAsync.request(item));
                                             }}
