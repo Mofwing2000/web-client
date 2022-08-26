@@ -20,6 +20,7 @@ import Product from './container/product/Product';
 import Cart from './container/cart/Cart';
 import Checkout from './container/checkout/Checkout';
 import CollectionPage from './container/collection/CollectionPage';
+import WishListPage from './container/wish-list/WishList';
 
 function App() {
     const { mode } = useAppSelector<DisplayModeState>(selectDarkMode);
@@ -51,6 +52,14 @@ function App() {
                             element={
                                 <PrivateRoute>
                                     <Checkout />
+                                </PrivateRoute>
+                            }
+                        ></Route>
+                        <Route
+                            path="wish-list"
+                            element={
+                                <PrivateRoute>
+                                    <WishListPage />
                                 </PrivateRoute>
                             }
                         ></Route>

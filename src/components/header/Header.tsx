@@ -48,19 +48,19 @@ const Header = () => {
             title: `${t('product:top')}`,
             url: '/top',
             subNav: [
-                { title: `${t('product:t-shirt')}`, url: `/top/${TopCategory.T_SHIRT}` },
-                { title: `${t('product:sweat-shirt')}`, url: `/top/${TopCategory.SWEAT_SHIRT}` },
-                { title: `${t('product:jacket')}`, url: `/top/${TopCategory.JACKET}` },
-                { title: `${t('product:hoodie')}`, url: `/top/${TopCategory.HOODIE}` },
+                { title: `${t('product:t-shirt')}`, url: `/top/?category=${TopCategory.T_SHIRT}` },
+                { title: `${t('product:sweat-shirt')}`, url: `/top/?category=${TopCategory.SWEAT_SHIRT}` },
+                { title: `${t('product:jacket')}`, url: `/top/?category=${TopCategory.JACKET}` },
+                { title: `${t('product:hoodie')}`, url: `/top/?category=${TopCategory.HOODIE}` },
             ],
         },
         {
             title: `${t('product:bottom')}`,
             url: '/bottom',
             subNav: [
-                { title: `${t('product:pants')}`, url: `/top/${BottomCategory.PANTS}` },
-                { title: `${t('product:jeans')}`, url: `/top/${BottomCategory.JEANS}` },
-                { title: `${t('product:shorts')}`, url: `/top/${BottomCategory.SHORTS}` },
+                { title: `${t('product:pants')}`, url: `/top/?category=${BottomCategory.PANTS}` },
+                { title: `${t('product:jeans')}`, url: `/top/?category=${BottomCategory.JEANS}` },
+                { title: `${t('product:shorts')}`, url: `/top/?category=${BottomCategory.SHORTS}` },
             ],
         },
         { title: `${t('header:about')}`, url: '/about' },
@@ -195,7 +195,7 @@ const Header = () => {
                         </nav>
                         <div className="header__main__control col-lg-4 col-md-3 d-none d-md-flex justify-content-end align-items-center gap-4">
                             <i className="fa-solid fa-magnifying-glass"></i>
-                            <Link to="/wishlist">
+                            <Link to="/wish-list">
                                 <i className="fa-solid fa-heart"></i>
                             </Link>
                             <Link to="/shopping-cart">
