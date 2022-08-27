@@ -1,0 +1,42 @@
+@use '../../sass/style.scss' as *;
+.catalog {
+    &__sidebar__item {
+        border-bottom: 1px solid $para-color;
+
+        &__heading {
+            margin-bottom: 10px;
+        }
+        &__color {
+            font-size: 220x;
+            display: inline-flex;
+            margin-right: 10px;
+            justify-content: center;
+            align-items: center;
+            // padding: 1px;
+            border: 1px solid rgba(84, 80, 80, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            &.active {
+                border: solid 2px $primary-color;
+            }
+        }
+
+        &__size {
+            width: 50px;
+            height: 34px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            // padding: 2px 4px;
+            border: 1px solid rgba($color: $gray-color, $alpha: 0.8);
+            border-radius: 2px;
+            cursor: pointer;
+            &.out-stock {
+                opacity: 0.2;
+            }
+            &.active {
+                border: solid 2px $primary-color;
+            }
+        }
+    }
+}
