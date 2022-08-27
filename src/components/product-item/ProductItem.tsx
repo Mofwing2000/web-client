@@ -12,8 +12,6 @@ interface IProps {
 
 const ProductCard: FC<IProps> = (props) => {
     const { product, onToggleWishList, isLiked } = props;
-    const dispatch = useDispatch();
-    console.log('render');
     const colorsBar = useMemo(
         () =>
             product && (
@@ -39,13 +37,17 @@ const ProductCard: FC<IProps> = (props) => {
                 <Link to={`/product/${product.id}`}>
                     <div
                         className="product-item__pic__photo"
-                        style={{ backgroundImage: `url(${product.photoUrls[0]}), url(${defaultPhotoImg})` }}
-                    ></div>
+                        // style={{ backgroundImage: `url(${product.photoUrls[0]}), url(${defaultPhotoImg})` }}
+                    >
+                        <img className="w-100 h-100" src={`${product.photoUrls[0]}`} alt="" />
+                    </div>
                 </Link>
             </div>
-            <div className="product-item__content">
+            <div className="product-item__content d-block">
                 <Link to={`/product/${product.id}`}>
-                    <p className="product-item__content__name product-item__content__text">{product.name}</p>
+                    <p className="product-item__content__name product-item__content__text  text-truncate">
+                        {product.name}
+                    </p>
                 </Link>
                 <div className="d-flex justify-content-between align-items-center">
                     <p className="product-item__content__text fs-5 d-flex align-items-center m-0">${product.price}</p>
