@@ -46,5 +46,7 @@
     "forgotPassword": "Forgot password?",
     "confirmEmailSent": "A confirm message has been send to your email",
     "mustMatchPassword": "Your passwords do not match",
-    "collection": "Collection"
+    "collection": "Collection",
+    "searchHere": "Search here ...",
+    "searchPageTitle": "Search result for"
 }

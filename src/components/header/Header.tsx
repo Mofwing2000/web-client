@@ -1,38 +1,32 @@
 import i18next from 'i18next';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../assets/image/logo.png';
-import { DEFAULT_USER_PHOTO_URL as defaultUserPhoto } from '../../constants/commons';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
-import { logout } from '../../store/auth/auth.action';
-import { toggleDarkMode } from '../../store/dark-mode/dark-mode.action';
-import { selectAuth } from '../../store/root-reducer';
-import './header.scss';
-import { selectDarkMode } from '../../store/dark-mode/dark-mode.reducer';
+import AuthState from '../../models/auth';
+import { CartState } from '../../models/cart';
 import { DisplayModeState } from '../../models/display-mode';
 import { BottomCategory, TopCategory } from '../../models/product';
-import { selectWishList } from '../../store/wish-list/wish-list.reducer';
-import { selectCart } from '../../store/cart/cart.reducer';
-import { clearWishList, fetchWishListAsync } from '../../store/wish-list/wish-list.action';
-import { current } from '@reduxjs/toolkit';
-import { collection, doc } from 'firebase/firestore';
-import { db } from '../../config/firebase.config';
+import { logout } from '../../store/auth/auth.action';
 import { fetchCartAsync } from '../../store/cart/cart.action';
+import { selectCart } from '../../store/cart/cart.reducer';
+import { toggleDarkMode } from '../../store/dark-mode/dark-mode.action';
+import { selectDarkMode } from '../../store/dark-mode/dark-mode.reducer';
+import { selectAuth } from '../../store/root-reducer';
+import { clearWishList, fetchWishListAsync } from '../../store/wish-list/wish-list.action';
 import LoadingModal from '../loading-modal/LoadingModal';
-import AuthState from '../../models/auth';
-import { WishListState } from '../../models/wish-list';
-import { CartState } from '../../models/cart';
+import './header.scss';
 
 const Header = () => {
     const { currentUser, isAuthLoading } = useAppSelector<AuthState>(selectAuth);
     const { mode } = useAppSelector<any>(selectDarkMode) as DisplayModeState;
-    const { wishList, isWishListLoading } = useAppSelector<WishListState>(selectWishList);
     const { cart, isCartLoading } = useAppSelector<CartState>(selectCart);
     const [isShowSidebar, setIsShowSidebar] = useState<boolean>(false);
     const dispatch = useAppDispatch();
-    const isLoading = useMemo(() => isAuthLoading || isWishListLoading, [isAuthLoading, isWishListLoading]);
-
+    const navigate = useNavigate();
+    const isLoading = useMemo(() => isAuthLoading || isCartLoading, [isAuthLoading, isCartLoading]);
+    const [isShowSearch, setIsShowSearch] = useState<boolean>(false);
     const handleLogout = () => {
         dispatch(logout());
     };
@@ -194,7 +188,12 @@ const Header = () => {
                             </ul>
                         </nav>
                         <div className="header__main__control col-lg-4 col-md-3 d-none d-md-flex justify-content-end align-items-center gap-4">
-                            <i className="fa-solid fa-magnifying-glass"></i>
+                            <i
+                                className="fa-solid fa-magnifying-glass"
+                                onClick={() => {
+                                    setIsShowSearch(true);
+                                }}
+                            ></i>
                             <Link to="/wish-list">
                                 <i className="fa-solid fa-heart"></i>
                             </Link>
@@ -282,7 +281,13 @@ const Header = () => {
                         </div>
                     </div>
                     <div className="header--mobile__main__control col-lg-4 col-md-3 d-flex justify-content-between w-50 align-items-center gap-4 mx-auto mb-5">
-                        <i className="fa-solid fa-magnifying-glass"></i>
+                        <i
+                            className="fa-solid fa-magnifying-glass cursor-primary"
+                            onClick={() => {
+                                setIsShowSearch(true);
+                            }}
+                        ></i>
+
                         <Link to="/wishlist">
                             <i className="fa-solid fa-heart"></i>
                         </Link>
@@ -320,6 +325,31 @@ const Header = () => {
                     <span className="header--mobile__main__close" onClick={() => setIsShowSidebar(false)}>
                         <i className="fa-solid fa-xmark text-danger"></i>
                     </span>
+                </div>
+            </div>
+            <div className={`search-model ${isShowSearch ? 'd-block show' : 'd-none'}`}>
+                <div className="h-100 d-flex align-items-center justify-content-center">
+                    <div className="search-close-switch" onClick={() => setIsShowSearch(false)}>
+                        +
+                    </div>
+                    <form className="search-model-form">
+                        <input
+                            type="text"
+                            id="search-input"
+                            placeholder={t('common:searchHere')}
+                            onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    if (e.target.value.trim() !== '') {
+                                        navigate(`../search/?keyword=${e.target.value.trim()}`);
+
+                                        e.target.value = '';
+                                        setIsShowSearch(false);
+                                    }
+                                }
+                            }}
+                        />
+                    </form>
                 </div>
             </div>
             {isLoading && <LoadingModal />}

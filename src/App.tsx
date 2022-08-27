@@ -21,6 +21,8 @@ import Cart from './container/cart/Cart';
 import Checkout from './container/checkout/Checkout';
 import CollectionPage from './container/collection/CollectionPage';
 import WishListPage from './container/wish-list/WishList';
+import SearchPage from './container/search/SearchPage';
+import OrderPage from './container/order-page/OrderPage';
 
 function App() {
     const { mode } = useAppSelector<DisplayModeState>(selectDarkMode);
@@ -36,6 +38,7 @@ function App() {
                     <Route path="/" element={<MainLayout />}>
                         <Route index element={<Home />}></Route>
                         <Route path=":type" element={<Catalog />}></Route>
+                        <Route path="search" element={<SearchPage />}></Route>
                         <Route path="product/:productId" element={<Product />}></Route>
                         <Route path="collection/:collectionId" element={<CollectionPage />}></Route>
                         <Route path="about" element={<Home />}></Route>
@@ -60,6 +63,14 @@ function App() {
                             element={
                                 <PrivateRoute>
                                     <WishListPage />
+                                </PrivateRoute>
+                            }
+                        ></Route>
+                        <Route
+                            path="order"
+                            element={
+                                <PrivateRoute>
+                                    <OrderPage />
                                 </PrivateRoute>
                             }
                         ></Route>

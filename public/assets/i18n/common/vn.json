@@ -46,5 +46,7 @@
     "forgotPassword": "Quên mật khẩu?",
     "confirmEmailSent": "Tin nhắn xác nhận đã được gủi đến email của bạn",
     "mustMatchPassword": "Mật khẩu không khớp",
-    "collection": "Bộ sưu tập"
+    "collection": "Bộ sưu tập",
+    "searchHere": "Tìm sản phẩm ...",
+    "searchPageTitle": "Kết quả tìm kiếm cho"
 }
