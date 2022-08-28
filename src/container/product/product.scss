@@ -13,9 +13,6 @@
                 }
                 &__item {
                     width: 100%;
-                    &__container {
-                        @include square-div-with-background();
-                    }
                 }
             }
         }

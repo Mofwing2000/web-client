@@ -55,7 +55,6 @@ const Product = () => {
             toast.warning(`${t('common:selectOneSize')}`);
             return 0;
         } else {
-            console.log(selectedColor, selectedSize, selectQuantity, productData);
             if (productData) {
                 const cartItem: CartItem = {
                     id: productData.id,
@@ -63,7 +62,6 @@ const Product = () => {
                     color: selectedColor,
                     size: selectedSize,
                 };
-                console.log(cartItem);
                 dispatch(addCartAsync.request(cartItem));
             }
             return 1;
