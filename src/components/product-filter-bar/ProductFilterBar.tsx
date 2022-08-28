@@ -22,7 +22,7 @@ const ProductFilterBar: FC<IProps> = (props) => {
                     <select
                         defaultValue={10}
                         id="pageLimit"
-                        className="form-select "
+                        className="form-select cursor"
                         aria-label="pageLimit-select"
                         onChange={(e) => setPageSize(e.target.value === '10' ? 10 : e.target.value === '20' ? 20 : 50)}
                         value={pageSize}
@@ -38,7 +38,7 @@ const ProductFilterBar: FC<IProps> = (props) => {
                         <select
                             defaultValue={10}
                             id="sort"
-                            className="form-select "
+                            className="form-select cursor"
                             aria-label="sort-select"
                             onChange={(e) =>
                                 setSortType(

@@ -90,7 +90,7 @@ const Header = () => {
             <header className="header position-md-fixed p-0">
                 <div className="bg-black w-100">
                     <div className="header--top container d-none d-md-flex py-2 px-4 justify-content-end align-items-center">
-                        <div className="d-flex gap-3 align-items-center">
+                        <div className="d-flex gap-3 align-items-center cursor">
                             {mode === 'light' ? (
                                 <i
                                     className="fa-solid fa-sun text-warning fs-5"
@@ -104,7 +104,7 @@ const Header = () => {
                             )}
 
                             <select
-                                className="header--top__language bg-black border-0 text-white "
+                                className="header--top__language bg-black border-0 text-white cursor"
                                 aria-label="Language select"
                                 onChange={handleLanguageChange}
                                 value={localStorage.getItem('i18nextLng') || 'en'}
@@ -112,7 +112,7 @@ const Header = () => {
                                 <option value="en">English</option>
                                 <option value="vn">Tiếng Việt</option>
                             </select>
-                            <div className="header--top__user dropdown d-flex align-items-center">
+                            <div className="header--top__user dropdown text-dark d-flex align-items-center cursor">
                                 {currentUser ? (
                                     <>
                                         <p
@@ -122,10 +122,10 @@ const Header = () => {
                                             aria-expanded="false"
                                         >{`${currentUser.firstName} ${currentUser.lastName},`}</p>
                                         <ul
-                                            className="header__nav__control--dropdown__menu dropdown-menu dropdown-menu-end px-3"
+                                            className="header__nav__control--dropdown__menu dropdown-menu dropdown-menu-end px-3 "
                                             aria-labelledby="dropdownUserIcon"
                                         >
-                                            <li className="p-2">
+                                            <li className="p-2 text-dark">
                                                 <Link className="text-inherit" to={`user/view/${currentUser.id}`}>
                                                     <i className="fa-solid fa-user me-3"></i>
                                                     {t('common:profile')}
@@ -149,7 +149,9 @@ const Header = () => {
                                         </ul>
                                     </>
                                 ) : (
-                                    <Link to="/login">{t('common:login')}</Link>
+                                    <Link className="text-white" to="/login">
+                                        {t('common:login')}
+                                    </Link>
                                 )}
                             </div>
                         </div>
@@ -171,7 +173,7 @@ const Header = () => {
                                     navItem.map((item, index) => (
                                         <li
                                             key={index}
-                                            className="header__main__item position-relative d-inline-block p-2 "
+                                            className="header__main__item position-relative d-inline-block p-2 cursor-primary"
                                         >
                                             <Link to={item.url}>{item.title}</Link>
                                             {item.subNav && (
@@ -189,25 +191,25 @@ const Header = () => {
                         </nav>
                         <div className="header__main__control col-lg-4 col-md-3 d-none d-md-flex justify-content-end align-items-center gap-4">
                             <i
-                                className="fa-solid fa-magnifying-glass"
+                                className="fa-solid fa-magnifying-glass cursor-primary"
                                 onClick={() => {
                                     setIsShowSearch(true);
                                 }}
                             ></i>
                             <Link to="/wish-list">
-                                <i className="fa-solid fa-heart"></i>
+                                <i className="fa-solid fa-heart cursor-primary"></i>
                             </Link>
                             <Link to="/shopping-cart">
-                                <div className="header__main__control__cart">
-                                    <i className="fa-solid fa-cart-shopping"></i>
+                                <div className="header__main__control__cart ">
+                                    <i className="fa-solid fa-cart-shopping cursor-primary"></i>
                                     <p className="header__main__control__cart__number">
-                                        {cart && cart.cartItems.length}
+                                        {(cart && cart.cartItems.length) || 0}
                                     </p>
                                 </div>
                             </Link>
                         </div>
                         <div
-                            className="header__main__burger position-absolute d-block d-md-none"
+                            className="header__main__burger position-absolute d-block d-md-none cursor"
                             onClick={() => setIsShowSidebar(true)}
                         >
                             <i className="fa-solid fa-bars"></i>
@@ -217,7 +219,7 @@ const Header = () => {
             </header>
             <div className={`header--mobile text-dark ${isShowSidebar ? 'show' : ''} `}>
                 <div className="header--mobile__main ">
-                    <div className="d-flex gap-3 align-items-center justify-content-between mb-4 mt-4">
+                    <div className="d-flex gap-3 align-items-center justify-content-between mb-4 mt-4 cursor">
                         {mode === 'light' ? (
                             <i
                                 className="fa-solid fa-sun text-warning fs-5"
@@ -231,7 +233,7 @@ const Header = () => {
                         )}
 
                         <select
-                            className="header--top__language bg-light border-0 text-dark "
+                            className="header--top__language border-0 text-dark cursor"
                             aria-label="Language select"
                             onChange={handleLanguageChange}
                             value={localStorage.getItem('i18nextLng') || 'en'}
@@ -239,7 +241,7 @@ const Header = () => {
                             <option value="en">English</option>
                             <option value="vn">Tiếng Việt</option>
                         </select>
-                        <div className="header--top__user dropdown text-black d-flex align-items-center">
+                        <div className="header--top__user dropdown text-black d-flex align-items-center cursor">
                             {currentUser ? (
                                 <>
                                     <p
@@ -249,7 +251,7 @@ const Header = () => {
                                         aria-expanded="false"
                                     >{`${currentUser.firstName} ${currentUser.lastName},`}</p>
                                     <ul
-                                        className="header__nav__control--dropdown__menu dropdown-menu dropdown-menu-end px-3"
+                                        className="header__nav__control--dropdown__menu dropdown-menu dropdown-menu-end px-3 "
                                         aria-labelledby="dropdownUserIcon"
                                     >
                                         <li className="p-2">
@@ -310,9 +312,9 @@ const Header = () => {
                                     >
                                         <Link to={item.url}>{item.title}</Link>
                                         {item.subNav && (
-                                            <ul className="header--mobile__main__subnav px-3 py-2">
+                                            <ul className="header--mobile__main__subnav px-3 py-2 ">
                                                 {item.subNav.map((subItem, subIndex) => (
-                                                    <li key={subIndex}>
+                                                    <li className="cursor-primary" key={subIndex}>
                                                         <Link to={subItem.url}>{subItem.title}</Link>
                                                     </li>
                                                 ))}
@@ -322,7 +324,7 @@ const Header = () => {
                                 ))}
                         </ul>
                     </nav>
-                    <span className="header--mobile__main__close" onClick={() => setIsShowSidebar(false)}>
+                    <span className="header--mobile__main__close cursor" onClick={() => setIsShowSidebar(false)}>
                         <i className="fa-solid fa-xmark text-danger"></i>
                     </span>
                 </div>

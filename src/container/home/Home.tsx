@@ -3,7 +3,7 @@ import Hero from '../../components/hero/Hero';
 import { collection, onSnapshot, query } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
 import { db } from '../../config/firebase.config';
-import { Collection } from '../../models/collection';
+import { Collection, CollectionState } from '../../models/collection';
 import { Link, useNavigate } from 'react-router-dom';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
 import { FirebaseError } from '@firebase/util';
@@ -16,7 +16,7 @@ const Home = () => {
     // const [collectionsData, setCollectionsData] = useState<Collection[]>();
     // const [isLoading, setIsLoading] = useState<boolean>(false);
     const dispatch = useAppDispatch();
-    const { collections, isCollectionLoading } = useAppSelector<any>(selectCollection);
+    const { collections, isCollectionLoading } = useAppSelector<CollectionState>(selectCollection);
     const { t } = useTranslation(['common', 'collection']);
     const fetchQuery = query(collection(db, 'collection'));
     useEffect(() => {
@@ -59,7 +59,12 @@ const Home = () => {
                     <div className="col-3">{/* <ProductItem /> */}</div>
                 </div>
             </div>
-            {isCollectionLoading && <LoadingModal />}
+            {isCollectionLoading && (
+                <>
+                    <LoadingModal />
+                    <div className="empty-content-container"></div>
+                </>
+            )}
         </>
     );
 };

@@ -246,7 +246,7 @@ const Catalog = () => {
                                 <div className="catalog__sidebar__item pb-2 mb-4">
                                     <div className="catalog__sidebar__item__heading">
                                         <h5
-                                            className="text-uppercase fw-bold"
+                                            className="text-uppercase fw-bold cursor"
                                             data-bs-toggle="collapse"
                                             data-bs-target="#topCategories"
                                             aria-expanded="false"
@@ -276,7 +276,7 @@ const Catalog = () => {
                                 <div className="catalog__sidebar__item pb-2 mb-4">
                                     <div className="catalog__sidebar__item__heading">
                                         <h5
-                                            className="text-uppercase fw-bold"
+                                            className="text-uppercase fw-bold cursor"
                                             data-bs-toggle="collapse"
                                             data-bs-target="#bottomCategories"
                                             aria-expanded="false"
@@ -306,7 +306,7 @@ const Catalog = () => {
                                 <div className="catalog__sidebar__item pb-2 mb-4">
                                     <div className="catalog__sidebar__item__heading">
                                         <h5
-                                            className="text-uppercase fw-bold"
+                                            className="text-uppercase fw-bold cursor"
                                             data-bs-toggle="collapse"
                                             data-bs-target="#colorCategories"
                                             aria-expanded="false"
@@ -339,7 +339,7 @@ const Catalog = () => {
                                 <div className="catalog__sidebar__item pb-2 mb-4">
                                     <div className="catalog__sidebar__item__heading">
                                         <h5
-                                            className="text-uppercase fw-bold"
+                                            className="text-uppercase fw-bold cursor"
                                             data-bs-toggle="collapse"
                                             data-bs-target="#sizeCategories"
                                             aria-expanded="false"

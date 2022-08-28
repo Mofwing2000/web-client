@@ -13,7 +13,7 @@ const MainLayout = () => {
     return (
         <>
             <Header />
-            <main>
+            <main className="pt-0 pt-md-auto">
                 <Outlet context={currentUser} />
             </main>
             <Footer />
