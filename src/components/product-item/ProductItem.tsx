@@ -39,7 +39,16 @@ const ProductCard: FC<IProps> = (props) => {
                         className="product-item__pic__photo"
                         // style={{ backgroundImage: `url(${product.photoUrls[0]}), url(${defaultPhotoImg})` }}
                     >
-                        <img className="w-100 h-100" src={`${product.photoUrls[0]}`} alt="" />
+                        <img
+                            className="w-100 h-100"
+                            src={`${product.photoUrls[0]}`}
+                            alt="product-item"
+                            onError={({ currentTarget }) => {
+                                if (currentTarget?.src) {
+                                    currentTarget.src = defaultPhotoImg;
+                                }
+                            }}
+                        />
                     </div>
                 </Link>
             </div>
