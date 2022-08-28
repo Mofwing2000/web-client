@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Order, OrderState } from '../../models/order';
-
+import '../../sass/common.scss';
 interface Iprops {
     ordersData: Order[];
 }
@@ -8,7 +8,7 @@ interface Iprops {
 import ReactTooltip from 'react-tooltip';
 import moment from 'moment';
 import { Timestamp } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 const OrderTable = (props: Iprops) => {
@@ -17,10 +17,10 @@ const OrderTable = (props: Iprops) => {
     const navigate = useNavigate();
     const { t } = useTranslation(['common', 'order']);
     const handleView = (data: Order) => {
-        navigate(`/order/detail/${data.id}`);
+        navigate(`/order/${data.id}`);
     };
-    return (
-        <div className="order-table table-responsive-sm">
+    return ordersData && ordersData.length ? (
+        <div className="order-table table-responsive-lg w-100">
             <table className="order-table table table-bordered mt-3">
                 <thead className="order-table__head">
                     <tr className="d-flex">
@@ -169,6 +169,13 @@ const OrderTable = (props: Iprops) => {
                         ))}
                 </tbody>
             </table>
+        </div>
+    ) : (
+        <div className="empty-content-container">
+            <h3 className="mb-5">No order</h3>
+            <div className="checkout--empty__navigate">
+                <Link to="/top">Shop now</Link>
+            </div>
         </div>
     );
 };
