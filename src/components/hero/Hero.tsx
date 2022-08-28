@@ -33,10 +33,10 @@ const Hero: FC<IProps> = (props) => {
                                     <div className="row h-100">
                                         <div className="h-100 col-xl-5 col-lg-7 col-md-8">
                                             <div className="h-100 hero__text position-relative">
-                                                <h2 className="fw-bold fs-1 mb-5">{item.title}</h2>
+                                                <h2 className="fw-bold fs-2 fs-sm-1 mb-5">{item.title}</h2>
                                                 <p>{item.description}</p>
                                                 <Link to={`./collection/${item.id}`}>
-                                                    <span className="py-2 px-4 bg-black fs-5 d-inline-flex gap-3 align-items-center">
+                                                    <span className="py-1 py-sm-2 px-2 px-sm-4 bg-black fs-6 fs-sm-5 d-inline-flex gap-3 align-items-center">
                                                         Shop now <i className="fa-solid fa-arrow-right-long"></i>
                                                     </span>
                                                 </Link>
