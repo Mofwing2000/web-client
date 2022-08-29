@@ -57,6 +57,7 @@ const OrderPage = () => {
                 ),
             );
             const fetchData = async () => {
+                setIsLoading(true);
                 const list: Order[] = [];
                 try {
                     const querySnapshot = await getDocs(filterQuery);
@@ -65,10 +66,12 @@ const OrderPage = () => {
                             list.push(orderData.data() as Order);
                         }
                     });
+                    setIsLoading(false);
                     setOrdersData(list);
                 } catch (error) {
                     if (error instanceof FirebaseError) {
                         toast.error(error.message);
+                        setIsLoading(false);
                     }
                 }
             };
@@ -102,7 +105,7 @@ const OrderPage = () => {
                 </div>
             )}
             <Pagination onPageChange={handlePageClick} pageCount={pageCount} />
-            {isLoading && <LoadingModal />}
+            {(isLoading || isAuthLoading) && <LoadingModal />}
         </>
     );
 };
