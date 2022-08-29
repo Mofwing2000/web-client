@@ -48,5 +48,8 @@
     "mustMatchPassword": "Mật khẩu không khớp",
     "collection": "Bộ sưu tập",
     "searchHere": "Tìm sản phẩm ...",
-    "searchPageTitle": "Kết quả tìm kiếm cho"
+    "searchPageTitle": "Kết quả tìm kiếm cho",
+    "addToCart": "Thêm vào giỏ",
+    "buyNow": "Mua ngay",
+    "comment": "Bình luận"
 }

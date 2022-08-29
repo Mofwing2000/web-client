@@ -48,5 +48,8 @@
     "mustMatchPassword": "Your passwords do not match",
     "collection": "Collection",
     "searchHere": "Search here ...",
-    "searchPageTitle": "Search result for"
+    "searchPageTitle": "Search result for",
+    "addToCart": "Add to cart",
+    "buyNow": "Buy now",
+    "comment": "Comment"
 }

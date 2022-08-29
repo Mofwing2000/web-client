@@ -1,6 +1,6 @@
 @use '../../sass/style.scss' as *;
 
-.product-profile {
+.product {
     &__main {
         &__gallery {
             &__slider {
@@ -121,6 +121,23 @@
                     white-space: -pre-wrap;
                     white-space: -o-pre-wrap;
                     word-wrap: break-word;
+                }
+            }
+        }
+    }
+    &__comment {
+        margin-top: 200px;
+        &__input {
+            resize: none;
+        }
+
+        &__item {
+            &__info {
+                width: 160px;
+                &__avatar {
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 50%;
                 }
             }
         }
