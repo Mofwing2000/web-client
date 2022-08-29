@@ -20,7 +20,6 @@ const ProductFilterBar: FC<IProps> = (props) => {
                 <div className="form-group">
                     <label htmlFor="pageLimit">{t('common:itemsPerPage')}:</label>
                     <select
-                        defaultValue={10}
                         id="pageLimit"
                         className="form-select cursor"
                         aria-label="pageLimit-select"
@@ -36,7 +35,6 @@ const ProductFilterBar: FC<IProps> = (props) => {
                     <label htmlFor="sort">{t('common:sortBy')}:</label>
                     <div className="d-flex">
                         <select
-                            defaultValue={10}
                             id="sort"
                             className="form-select cursor"
                             aria-label="sort-select"
