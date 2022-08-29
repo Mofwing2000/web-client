@@ -12,6 +12,10 @@ import ProductItem from '../../components/product-item/ProductItem';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import { selectCollection } from '../../store/collection/collection.reducer';
 import { clearCollection, fetchColllectionsAsync } from '../../store/collection/collection.action';
+import deliImg from '../../assets/image/services1.svg';
+import secureImg from '../../assets/image/services2.svg';
+import paymentImg from '../../assets/image/services2.svg';
+import handleImg from '../../assets/image/services4.svg';
 const Home = () => {
     // const [collectionsData, setCollectionsData] = useState<Collection[]>();
     // const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -55,6 +59,57 @@ const Home = () => {
         <>
             <div>
                 {heroComponent}
+                <div className="categories-area section-padding40 gray-bg">
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="col-lg-3 col-md-6 col-sm-6">
+                                <div className="single-cat mb-50 wow fadeInUp">
+                                    <div className="cat-icon">
+                                        <img src={deliImg} alt="" />
+                                    </div>
+                                    <div className="cat-cap">
+                                        <h5>Fast Delivery</h5>
+                                        <p>
+                                            Reasonable price delivery fast and professional service excellent technology
+                                            support
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-3 col-md-6 col-sm-6">
+                                <div className="single-cat mb-50 wow fadeInUp">
+                                    <div className="cat-icon"></div>
+                                    <div className="cat-cap">
+                                        <h5>Secure Infomation</h5>
+                                        <p>We guarantee that all customers&apos; information are 100% secured</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-3 col-md-6 col-sm-6">
+                                <div className="single-cat mb-50 wow fadeInUp">
+                                    <div className="cat-icon">
+                                        <img src={paymentImg} alt="" />
+                                    </div>
+                                    <div className="cat-cap">
+                                        <h5>Fast &amp; Free Delivery</h5>
+                                        <p>Free delivery on all orders</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-3 col-md-6 col-sm-6">
+                                <div className="single-cat mb-30 wow fadeInUp">
+                                    <div className="cat-icon">
+                                        <img src={handleImg} alt="" />
+                                    </div>
+                                    <div className="cat-cap">
+                                        <h5>Fast &amp; Free Delivery</h5>
+                                        <p>Free delivery on all orders</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div className="row">
                     <div className="col-3">{/* <ProductItem /> */}</div>
                 </div>
