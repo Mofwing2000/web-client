@@ -9,7 +9,7 @@ import AdminRoute from './routes/AdminRoute';
 import PrivateRoute from './routes/PrivateRoute';
 import { selectDarkMode } from './store/dark-mode/dark-mode.reducer';
 import 'react-toastify/dist/ReactToastify.css';
-import 'swiper/css';
+// import 'swiper/css';
 import './App.scss';
 import ForgotPassword from './pages/ForgotPassword';
 import Signup from './pages/Signup';
@@ -22,7 +22,10 @@ import Checkout from './container/checkout/Checkout';
 import CollectionPage from './container/collection/CollectionPage';
 import WishListPage from './container/wish-list/WishList';
 import SearchPage from './container/search/SearchPage';
+
+import OrderDetail from './container/order-detail/OrderDetail';
 import OrderPage from './container/order-page/OrderPage';
+import UserProfile from './container/user-profile/UserProfile';
 
 function App() {
     const { mode } = useAppSelector<DisplayModeState>(selectDarkMode);
@@ -71,6 +74,22 @@ function App() {
                             element={
                                 <PrivateRoute>
                                     <OrderPage />
+                                </PrivateRoute>
+                            }
+                        ></Route>
+                        <Route
+                            path="order/:orderId"
+                            element={
+                                <PrivateRoute>
+                                    <OrderDetail />
+                                </PrivateRoute>
+                            }
+                        ></Route>
+                        <Route
+                            path="profile"
+                            element={
+                                <PrivateRoute>
+                                    <UserProfile />
                                 </PrivateRoute>
                             }
                         ></Route>
