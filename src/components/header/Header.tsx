@@ -126,7 +126,7 @@ const Header = () => {
                                             aria-labelledby="dropdownUserIcon"
                                         >
                                             <li className="p-2 text-dark">
-                                                <Link className="text-inherit" to={`user/view/${currentUser.id}`}>
+                                                <Link className="text-inherit" to={`/profile`}>
                                                     <i className="fa-solid fa-user me-3"></i>
                                                     {t('common:profile')}
                                                 </Link>
@@ -255,7 +255,7 @@ const Header = () => {
                                         aria-labelledby="dropdownUserIcon"
                                     >
                                         <li className="p-2">
-                                            <Link className="text-inherit" to={`user/view/${currentUser.id}`}>
+                                            <Link className="text-inherit" to={`/profile`}>
                                                 <i className="fa-solid fa-user me-3"></i>
                                                 {t('common:profile')}
                                             </Link>
