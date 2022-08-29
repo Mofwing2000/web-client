@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { Order, OrderState } from '../../models/order';
 import '../../sass/common.scss';
+import ReactTooltip from 'react-tooltip';
+import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { firebaseDateFormat } from '../../helpers/common';
+
 interface Iprops {
     ordersData: Order[];
 }
-
-import ReactTooltip from 'react-tooltip';
-import moment from 'moment';
-import { Timestamp } from 'firebase/firestore';
-import { Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 
 const OrderTable = (props: Iprops) => {
     const { ordersData } = props;
@@ -72,17 +71,14 @@ const OrderTable = (props: Iprops) => {
                                         data-for={orderData.id + 'orderDate'}
                                         onMouseEnter={() => setTooltip(true)}
                                         onMouseLeave={() => setTooltip(false)}
+                                        className="text-capitalize"
                                     >
-                                        {moment((orderData.orderDate as unknown as Timestamp).toDate()).format(
-                                            'dddd, MMMM Do YYYY, h:mm:ss a',
-                                        )}
+                                        {firebaseDateFormat(orderData.orderDate)}
                                     </span>
                                     {tooltip && (
                                         <ReactTooltip id={orderData.id + 'orderDate'} effect="float">
-                                            <span>
-                                                {moment((orderData.orderDate as unknown as Timestamp).toDate()).format(
-                                                    'dddd, MMMM Do YYYY, h:mm:ss a',
-                                                )}
+                                            <span className="text-capitalize">
+                                                {firebaseDateFormat(orderData.orderDate)}
                                             </span>
                                         </ReactTooltip>
                                     )}
@@ -93,19 +89,16 @@ const OrderTable = (props: Iprops) => {
                                         data-for={orderData.id + 'receivingDate'}
                                         onMouseEnter={() => setTooltip(true)}
                                         onMouseLeave={() => setTooltip(false)}
+                                        className="text-capitalize"
                                     >
                                         {orderData.orderState === OrderState.DELIVERED &&
-                                            moment((orderData.receivingDate as unknown as Timestamp).toDate()).format(
-                                                'dddd, MMMM Do YYYY, h:mm:ss a',
-                                            )}
+                                            firebaseDateFormat(orderData.receivingDate!)}
                                     </span>
                                     {tooltip && (
                                         <ReactTooltip id={orderData.id + 'receivingDate'} effect="float">
-                                            <span>
+                                            <span className="text-capitalize">
                                                 {orderData.orderState === OrderState.DELIVERED &&
-                                                    moment(
-                                                        (orderData.receivingDate as unknown as Timestamp).toDate(),
-                                                    ).format('dddd, MMMM Do YYYY, h:mm:ss a')}
+                                                    firebaseDateFormat(orderData.receivingDate!)}
                                             </span>
                                         </ReactTooltip>
                                     )}

@@ -1,21 +1,20 @@
 import { FirebaseError } from '@firebase/util';
-import { getDoc, doc, updateDoc, onSnapshot, Timestamp, query, collection, where } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import './order-detail.scss';
-import moment from 'moment';
-import { useTranslation } from 'react-i18next';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
+import { db } from '../../config/firebase.config';
+import { firebaseDateFormat } from '../../helpers/common';
+import { useAppSelector } from '../../helpers/hooks';
+import AuthState from '../../models/auth';
 import { Order, OrderState } from '../../models/order';
 import { Bottom, Top } from '../../models/product';
 import { User } from '../../models/user';
-import { db } from '../../config/firebase.config';
-import { useAppSelector } from '../../helpers/hooks';
-import AuthState from '../../models/auth';
-import { selectAuth } from '../../store/root-reducer';
-import { DEFAULT_PRODUCT_PHOTO_URL as defaultPhotoImg } from '../../constants/commons';
 import '../../sass/common.scss';
+import { selectAuth } from '../../store/root-reducer';
+import './order-detail.scss';
 
 const OrderDetail = () => {
     const { t } = useTranslation(['common', 'order', 'user', 'product']);
@@ -234,18 +233,12 @@ const OrderDetail = () => {
                                     {orderData.shippingAddress}
                                 </p>
                                 <p className="mb-1">
-                                    <span className="fw-bold">{t('order:shippingDate')}: </span>
-                                    {orderData.shippingDate &&
-                                        moment((orderData.shippingDate as unknown as Timestamp).toDate()).format(
-                                            'dddd, MMMM Do YYYY, h:mm:ss a',
-                                        )}
+                                    <span className="fw-bold text-capitalize">{t('order:shippingDate')}: </span>
+                                    {orderData.shippingDate && firebaseDateFormat(orderData.shippingDate!)}
                                 </p>
                                 <p className="mb-1">
-                                    <span className="fw-bold">{t('order:receivingDate')}: </span>
-                                    {orderData.receivingDate &&
-                                        moment((orderData.receivingDate as unknown as Timestamp).toDate()).format(
-                                            'dddd, MMMM Do YYYY, h:mm:ss a',
-                                        )}
+                                    <span className="fw-bold text-capitalize">{t('order:receivingDate')}: </span>
+                                    {orderData.receivingDate && firebaseDateFormat(orderData.receivingDate!)}
                                 </p>
                                 <p className="mb-1">
                                     <span className="fw-bold">{t('order:note')}: </span>
@@ -319,7 +312,7 @@ const OrderDetail = () => {
                     <p>No data</p>
                 </div>
             )}
-            {isLoading && <LoadingModal />}
+            {(isLoading || isAuthLoading) && <LoadingModal />}
         </>
     );
 };
