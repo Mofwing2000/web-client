@@ -120,7 +120,7 @@ const SearchPage = () => {
                     </div>
                 ) : (
                     <div className="wish-list--empty ">
-                        <p className="text-center fs-4">No item in wish-list</p>
+                        <p className="text-center fs-4">{t('common:noItemFound')}</p>
                     </div>
                 )}
                 <Pagination onPageChange={handlePageClick} pageCount={pageCount} />

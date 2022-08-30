@@ -431,7 +431,7 @@ const Product = () => {
                                 </form>
                             ) : (
                                 <div>
-                                    <Link to="/login">Login to comment</Link>
+                                    <Link to="/login">{t('common:loginToComment')}</Link>
                                 </div>
                             )}
 
@@ -499,7 +499,7 @@ const Product = () => {
                                                 }
                                             }}
                                         >
-                                            <u>Load more...</u>
+                                            <u>{t('common:loadMore')}</u>
                                         </p>
                                     )}
                                 </ul>

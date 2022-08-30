@@ -1,5 +1,6 @@
 import { collection, query } from 'firebase/firestore';
 import React, { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
 import { db } from '../../config/firebase.config';
@@ -21,7 +22,7 @@ import './cart.scss';
 const CartPage = () => {
     const { cart, isCartLoading } = useAppSelector<CartState>(selectCart);
     const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
-
+    const { t } = useTranslation(['common', 'order']);
     // const [cartProducts , setCartProducts]  = useState<(Top|Bottom)[]>()
     const dispatch = useAppDispatch();
     const isLoading = useMemo(() => {
@@ -90,7 +91,7 @@ const CartPage = () => {
                             <div className="product__cart__item__text w-100">
                                 <h6>{cartItem?.name}</h6>
                                 <p>
-                                    Variant: {item.size}, {item.color}
+                                    {t('common:variant')}: {item.size}, {item.color}
                                 </p>
                                 <h5>${cartItem?.price}</h5>
                             </div>
@@ -131,7 +132,7 @@ const CartPage = () => {
                                     </div>
                                 </div>
                                 {cartItem && cartItemQuantity[item.id] > cartItem.quantity && (
-                                    <p className="text-danger">Limit quantity reached</p>
+                                    <p className="text-danger">{t('common:limitQuantityReached')}</p>
                                 )}
                             </div>
                         </td>
@@ -168,13 +169,13 @@ const CartPage = () => {
                                     <thead>
                                         <tr>
                                             <th scope="col" className="col-6">
-                                                Product
+                                                {t('order:subTotal')}
                                             </th>
                                             <th scope="col" className="col-3">
-                                                Quantity
+                                                {t('order:quantity')}
                                             </th>
                                             <th scope="col" className="col-2">
-                                                Total
+                                                {t('order:total')}
                                             </th>
                                             <th scope="col" className="col-1"></th>
                                         </tr>
@@ -185,12 +186,12 @@ const CartPage = () => {
                             <div className="row">
                                 <div className="col-lg-6 col-md-6 col-sm-6 ps-3">
                                     <div className="cart__btn">
-                                        <Link to="/top">Continue Shopping</Link>
+                                        <Link to="/top">{t('order:continueShoping')}</Link>
                                     </div>
                                 </div>
                                 <div className="col-lg-6 col-md-6 col-sm-6 text-end pe-3">
                                     <div className="cart__btn">
-                                        <Link to="/checkout"> Checkout</Link>
+                                        <Link to="/checkout"> {t('order:checkout')}</Link>
                                     </div>
                                 </div>
                             </div>
@@ -198,9 +199,9 @@ const CartPage = () => {
                     </div>
                 ) : (
                     <div className="cart-page--empty">
-                        <h3 className="mb-5">No items in cart</h3>
+                        <h3 className="mb-5">{t('common:noItemCart')}</h3>
                         <div className="cart__btn">
-                            <Link to="/top">Shop now</Link>
+                            <Link to="/top">{t('common:shopNow')}</Link>
                         </div>
                     </div>
                 )}

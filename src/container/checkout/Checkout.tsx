@@ -17,6 +17,7 @@ import LoadingModal from '../../components/loading-modal/LoadingModal';
 import { Link } from 'react-router-dom';
 import { UserState } from '../../models/user';
 import { selectUser } from '../../store/user/user.reducer';
+import { useTranslation } from 'react-i18next';
 
 const Checkout = () => {
     const { user } = useAppSelector<UserState>(selectUser);
@@ -31,6 +32,7 @@ const Checkout = () => {
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PaymentMethod.COD);
     const dispatch = useAppDispatch();
     const [isCreatingOrder, setIsCreatingOrder] = useState<boolean>(false);
+    const { t } = useTranslation(['common', 'order', 'user']);
     let isLoading = useMemo(() => {
         return isCartLoading || isProductLoading || isCreatingOrder;
     }, [isCartLoading, isProductLoading, isCreatingOrder]);
@@ -159,12 +161,13 @@ const Checkout = () => {
                             <form>
                                 <div className="row">
                                     <div className="col-lg-6">
-                                        <h6 className="checkout__title">Billing Details</h6>
+                                        <h6 className="checkout__title">{t('common:billDetail')}</h6>
                                         <div className="row">
                                             <div className="col-lg-6">
                                                 <div className="checkout__input">
                                                     <p className="checkout__input__text">
-                                                        Fist Name<span className="required">*</span>
+                                                        {t('user:firstName')}
+                                                        <span className="required">*</span>
                                                     </p>
                                                     <input
                                                         className="form-input"
@@ -177,7 +180,8 @@ const Checkout = () => {
                                             <div className="col-lg-6">
                                                 <div className="checkout__input">
                                                     <p className="checkout__input__text">
-                                                        Last Name<span className="required">*</span>
+                                                        {t('user:lastName')}
+                                                        <span className="required">*</span>
                                                     </p>
                                                     <input
                                                         className="form-input"
@@ -192,7 +196,8 @@ const Checkout = () => {
                                             <div className="col-lg-6">
                                                 <div className="checkout__input">
                                                     <p className="checkout__input__text">
-                                                        Phone<span className="required">*</span>
+                                                        {t('user:phoneNumber')}
+                                                        <span className="required">*</span>
                                                     </p>
                                                     <input
                                                         className="form-input"
@@ -218,7 +223,8 @@ const Checkout = () => {
                                         </div>
                                         <div className="checkout__input">
                                             <p className="checkout__input__text">
-                                                Address<span className="required">*</span>
+                                                {t('user:address')}
+                                                <span className="required">*</span>
                                             </p>
 
                                             <input
@@ -235,7 +241,8 @@ const Checkout = () => {
                                         </div>
                                         <div className="checkout__input">
                                             <p className="checkout__input__text">
-                                                Shipping<span className="required">*</span>
+                                                {t('order:shipping')}
+                                                <span className="required">*</span>
                                             </p>
                                             <div className="d-flex gap-5 mb-3">
                                                 <div className="form-check">
@@ -253,7 +260,7 @@ const Checkout = () => {
                                                         }
                                                     />
                                                     <label className="form-check-label" htmlFor="economy">
-                                                        Economy
+                                                        {t('order:economy')}
                                                     </label>
                                                 </div>
                                                 <div className="form-check">
@@ -270,14 +277,15 @@ const Checkout = () => {
                                                         }
                                                     />
                                                     <label className="form-check-label" htmlFor="first_class">
-                                                        First-class
+                                                        {t('order:firstClass')}
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="checkout__input">
                                             <p className="checkout__input__text">
-                                                Payment<span className="required">*</span>
+                                                {t('order:payment')}
+                                                <span className="required">*</span>
                                             </p>
                                             <div className="form-check">
                                                 <input
@@ -301,7 +309,7 @@ const Checkout = () => {
                                                     onClick={() => setPaymentMethod(PaymentMethod.BANK_TRANSFER)}
                                                 />
                                                 <label className="form-check-label" htmlFor="bank_transfer">
-                                                    Bank transfer
+                                                    {t('order:bankTransfer')}
                                                 </label>
                                                 <div
                                                     className={` mt-5 ${
@@ -312,10 +320,14 @@ const Checkout = () => {
                                                 >
                                                     <p className="text-center fw-bold">BANK - AGRIBANK</p>
                                                     <p className="text-center fw-bold">
-                                                        Account number: 15000206082220
+                                                        {t('order:accountNumber')}: 15000206082220
                                                     </p>
-                                                    <p className="text-center fw-bold mb-5">Card owner: VU DUC MINH</p>
-                                                    <p className="mb-0">Transfer Contents: OrderId_Full name.</p>
+                                                    <p className="text-center fw-bold mb-5">
+                                                        {t('order:cardOwner')}: VU DUC MINH
+                                                    </p>
+                                                    <p className="mb-0">
+                                                        {t('order:transferContent')}: OrderId_Full name.
+                                                    </p>
                                                     <p>
                                                         When transaction completed, your order will be automatically
                                                         handle by our staff.
@@ -324,7 +336,7 @@ const Checkout = () => {
                                             </div>
                                         </div>
                                         <div className="checkout__input">
-                                            <p className="checkout__input__text">Order notes</p>
+                                            <p className="checkout__input__text">{t('order:note')}</p>
                                             <input
                                                 className="form-input"
                                                 type="text"
@@ -336,9 +348,9 @@ const Checkout = () => {
                                     </div>
                                     <div className="col-lg-6">
                                         <div className="checkout__order">
-                                            <h4 className="order__title">Your order</h4>
+                                            <h4 className="order__title">{t('order:yourOrder')}</h4>
                                             <div className="checkout__order__products">
-                                                Product <span>Total</span>
+                                                {t('product:product')} <span>{t('order:total')}</span>
                                             </div>
                                             <ul className="checkout__total__products">
                                                 {cart &&
@@ -354,7 +366,7 @@ const Checkout = () => {
                                                                         {index + 1}. {cartItem?.name} * {item?.quantity}{' '}
                                                                     </span>
                                                                     <span>
-                                                                        Variant: {item.size}, {item.color}
+                                                                        {t('order:variant')}: {item.size}, {item.color}
                                                                     </span>
                                                                 </div>
                                                                 <span>
@@ -366,24 +378,24 @@ const Checkout = () => {
                                             </ul>
                                             <ul className="checkout__total__all">
                                                 <li>
-                                                    Subtotal{' '}
+                                                    {t('order:subtotal')}{' '}
                                                     <span className="checkout__total__all__price">${subTotal}</span>
                                                 </li>
                                                 <li>
-                                                    Shipping{' '}
+                                                    {t('order:shipping')}{' '}
                                                     <span className="checkout__total__all__price">
                                                         ${shippingType.price}
                                                     </span>
                                                 </li>
                                                 <li>
-                                                    Total{' '}
+                                                    {t('order:total')}{' '}
                                                     <span className="checkout__total__all__price">
                                                         ${subTotal && subTotal + shippingType.price}
                                                     </span>
                                                 </li>
                                             </ul>
                                             <button className="site-btn" onClick={handleOrder} disabled={isLoading}>
-                                                PLACE ORDER
+                                                {t('order:placeOrder')}
                                             </button>
                                         </div>
                                     </div>
@@ -392,9 +404,9 @@ const Checkout = () => {
                         </div>
                     ) : (
                         <div className="checkout--empty">
-                            <h3 className="mb-5">No items in cart</h3>
+                            <h3 className="mb-5">{t('common:cartNoItem')}</h3>
                             <div className="checkout--empty__navigate">
-                                <Link to="/top">Shop now</Link>
+                                <Link to="/top">{t('common:shopNow')}</Link>
                             </div>
                         </div>
                     )}

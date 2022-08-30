@@ -92,7 +92,7 @@ const WishListPage = () => {
                     </div>
                 ) : (
                     <div className="wish-list--empty ">
-                        <p className="text-center fs-4">No item in wish-list</p>
+                        <p className="text-center fs-4">{t('common:noItemWishList')}</p>
                     </div>
                 )}
             </div>

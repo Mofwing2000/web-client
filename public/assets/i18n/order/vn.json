@@ -24,5 +24,17 @@
     "total": "Tổng",
     "canceled": "Hủy",
     "totalAmount": "Tổng tiền",
-    "shippingInfo": "Thông tin vận chuyển"
+    "shippingInfo": "Thông tin vận chuyển",
+    "continueShoping": "Tiếp tục mua hàng",
+    "checkout": "Thanh toán",
+    "shipping": "Vận chuyển",
+    "economy": "Phổ thông",
+    "firstClass": "Hạng nhất",
+    "payment": "Thanh toán",
+    "bankTransfer": "Chuyển khoản",
+    "accountNumber": "Số tài khoản",
+    "cardOwner": "Chủ TK",
+    "transferContent": "Nội dung",
+    "yourOrder": "Đơn hàng của bạn",
+    "placeOrder": "Đặt hàng"
 }

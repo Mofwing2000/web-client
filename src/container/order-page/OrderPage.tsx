@@ -101,7 +101,7 @@ const OrderPage = () => {
                 </div>
             ) : (
                 <div className="empty-content-container">
-                    <p className=" text-center">No data</p>
+                    <p className=" text-center">{t('common:noData')}</p>
                 </div>
             )}
             <Pagination onPageChange={handlePageClick} pageCount={pageCount} />

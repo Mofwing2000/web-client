@@ -17,6 +17,7 @@ interface IProps {
 
 const Hero: FC<IProps> = (props) => {
     const { collectionsData } = props;
+    const { t } = useTranslation(['common']);
     SwiperCore.use([Navigation, Autoplay, EffectFade]);
 
     return (
@@ -39,7 +40,8 @@ const Hero: FC<IProps> = (props) => {
                                                 <p>{item.description}</p>
                                                 <Link to={`./collection/${item.id}`}>
                                                     <span className="py-1 py-sm-2 px-2 px-sm-4 bg-black fs-6 fs-sm-5 d-inline-flex gap-3 align-items-center">
-                                                        Shop now <i className="fa-solid fa-arrow-right-long"></i>
+                                                        {t('common:shopNow')}{' '}
+                                                        <i className="fa-solid fa-arrow-right-long"></i>
                                                     </span>
                                                 </Link>
 

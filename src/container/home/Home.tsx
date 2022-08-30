@@ -79,8 +79,8 @@ const Home = () => {
                                         <i className="fa-solid fa-truck-fast fs-1"></i>
                                     </div>
                                     <div className="cat-cap">
-                                        <h5 className="fw-bold">Fast Delivery</h5>
-                                        <p>Reasonable price, delivery fast</p>
+                                        <h5 className="fw-bold">{t('common:fastDelivery')}</h5>
+                                        <p>{t('common:shippingQuote')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -91,8 +91,8 @@ const Home = () => {
                                     </div>
 
                                     <div className="cat-cap">
-                                        <h5 className="fw-bold">Secure Infomation</h5>
-                                        <p>All customers&apos; inhtmlFormation are 100% secured</p>
+                                        <h5 className="fw-bold">{t('common:secureInfomation')}</h5>
+                                        <p>{t('common:secureInfoQuote')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -102,8 +102,8 @@ const Home = () => {
                                         <i className="fa-regular fa-credit-card fs-1"></i>
                                     </div>
                                     <div className="cat-cap">
-                                        <h5 className="fw-bold">Fast &amp; Free Delivery</h5>
-                                        <p>Free delivery on all orders</p>
+                                        <h5 className="fw-bold">{t('common:easyPayment')}</h5>
+                                        <p>{t('common:easyPaymentQuote')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -113,8 +113,8 @@ const Home = () => {
                                         <i className="fa-solid fa-headset fs-1"></i>
                                     </div>
                                     <div className="cat-cap">
-                                        <h5 className="fw-bold">Fast &amp; Free Delivery</h5>
-                                        <p>Free delivery on all orders</p>
+                                        <h5 className="fw-bold">{t('common:customerService')}</h5>
+                                        <p>{t('common:customerServiceQuote')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -124,7 +124,7 @@ const Home = () => {
                 <div className="container">
                     <div className="row">
                         <>
-                            <h3 className="text-center">New Arrival</h3>
+                            <h3 className="text-center">{t('common:newArrival')}</h3>
                             {latestProductRender}
                         </>
                     </div>

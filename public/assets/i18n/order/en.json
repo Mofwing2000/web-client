@@ -24,5 +24,17 @@
     "total": "Total",
     "totalAmount": "Total amount",
     "canceled": "Canceled",
-    "shippingInfo": "Shipping info"
+    "shippingInfo": "Shipping info",
+    "continueShoping": "Continue Shopping",
+    "checkout": "Checkout",
+    "shipping": "Shipping",
+    "economy": "Economy",
+    "firstClass": "First-class",
+    "payment": "Payment",
+    "bankTransfer": "Bank transfer",
+    "accountNumber": "Account nubmer",
+    "cardOwner": "Card owner",
+    "transferContent": "Transfer content",
+    "yourOrder": "Your order",
+    "placeOrder": "Place ordrer"
 }
