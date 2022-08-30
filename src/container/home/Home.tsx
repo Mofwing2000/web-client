@@ -16,9 +16,12 @@ import { clearProducts, fetchProductsAsync } from '../../store/product/product.a
 import { WishList, WishListState } from '../../models/wish-list';
 import { selectWishList } from '../../store/wish-list/wish-list.reducer';
 import { fetchWishListAsync, toggleWishListAsync } from '../../store/wish-list/wish-list.action';
+import { selectUser } from '../../store/user/user.reducer';
+import { UserState } from '../../models/user';
 const Home = () => {
     const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
     const { wishList, isWishListLoading } = useAppSelector<WishListState>(selectWishList);
+    const { user } = useAppSelector<UserState>(selectUser);
     const dispatch = useAppDispatch();
     const { collections, isCollectionLoading } = useAppSelector<CollectionState>(selectCollection);
     const { t } = useTranslation(['common', 'collection']);
@@ -35,9 +38,6 @@ const Home = () => {
 
     useEffect(() => {
         dispatch(fetchColllectionsAsync.request(fetchQuery));
-        return () => {
-            dispatch(clearCollection());
-        };
     }, []);
 
     useEffect(() => {
@@ -48,7 +48,7 @@ const Home = () => {
     }, []);
 
     useEffect(() => {
-        dispatch(fetchWishListAsync.request());
+        if (user && !wishList) dispatch(fetchWishListAsync.request());
     }, []);
     const latestProductRender = useMemo(
         () =>
@@ -154,4 +154,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default memo(Home);

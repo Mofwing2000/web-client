@@ -10,15 +10,18 @@ import ProductItem from '../../components/product-item/ProductItem';
 import { db } from '../../config/firebase.config';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import { Bottom, ProductState, Top } from '../../models/product';
+import { UserState } from '../../models/user';
 import { WishList, WishListState } from '../../models/wish-list';
 import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
 import { selectProduct } from '../../store/product/product.reducer';
+import { selectUser } from '../../store/user/user.reducer';
 import { fetchWishListAsync, toggleWishListAsync } from '../../store/wish-list/wish-list.action';
 import { selectWishList } from '../../store/wish-list/wish-list.reducer';
 import { PageLimit, PageOrder, PageProductSort } from '../../type/page-type';
 
 const SearchPage = () => {
     const { t } = useTranslation(['common', 'product']);
+    const { user } = useAppSelector<UserState>(selectUser);
     const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
     const { wishList, isWishListLoading } = useAppSelector<WishListState>(selectWishList);
     const location = useLocation();
@@ -90,7 +93,7 @@ const SearchPage = () => {
     }, [fetchProductQuery]);
 
     useEffect(() => {
-        dispatch(fetchWishListAsync.request());
+        if (!wishList && user) dispatch(fetchWishListAsync.request());
     }, []);
 
     return (

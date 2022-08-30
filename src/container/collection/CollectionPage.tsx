@@ -1,6 +1,6 @@
 import { FirebaseError } from '@firebase/util';
 import { collection, doc, getDoc, query } from 'firebase/firestore';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -10,9 +10,11 @@ import { db } from '../../config/firebase.config';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import { Collection } from '../../models/collection';
 import { ProductState } from '../../models/product';
+import { UserState } from '../../models/user';
 import { WishList, WishListState } from '../../models/wish-list';
 import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
 import { selectProduct } from '../../store/product/product.reducer';
+import { selectUser } from '../../store/user/user.reducer';
 import { fetchWishListAsync, toggleWishListAsync } from '../../store/wish-list/wish-list.action';
 import { selectWishList } from '../../store/wish-list/wish-list.reducer';
 import './collection-page.scss';
@@ -22,6 +24,7 @@ const CollectionPage = () => {
     const { collectionId } = useParams();
     const { t } = useTranslation(['common', 'product']);
     const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
+    const { user } = useAppSelector<UserState>(selectUser);
     const { wishList, isWishListLoading } = useAppSelector<WishListState>(selectWishList);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -62,7 +65,7 @@ const CollectionPage = () => {
     }, [fetchProductQuery]);
 
     useEffect(() => {
-        dispatch(fetchWishListAsync.request());
+        if (user && !wishList) dispatch(fetchWishListAsync.request());
     }, []);
 
     useEffect(() => {
@@ -82,7 +85,7 @@ const CollectionPage = () => {
             }
         };
         fetchCollection();
-    });
+    }, []);
 
     return (
         <>
@@ -131,4 +134,4 @@ const CollectionPage = () => {
     );
 };
 
-export default CollectionPage;
+export default memo(CollectionPage);

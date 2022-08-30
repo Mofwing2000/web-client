@@ -208,7 +208,7 @@ const Catalog = () => {
     }, [fetchProductQuery]);
 
     useEffect(() => {
-        dispatch(fetchWishListAsync.request());
+        if (!wishList && user) dispatch(fetchWishListAsync.request());
     }, []);
 
     return (
