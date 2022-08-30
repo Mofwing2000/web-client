@@ -1,6 +1,6 @@
 import { FirebaseError } from '@firebase/util';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -317,4 +317,4 @@ const OrderDetail = () => {
     );
 };
 
-export default OrderDetail;
+export default memo(OrderDetail);

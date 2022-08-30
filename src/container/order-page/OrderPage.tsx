@@ -1,6 +1,6 @@
 import { FirebaseError } from '@firebase/util';
 import { collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
@@ -110,4 +110,4 @@ const OrderPage = () => {
     );
 };
 
-export default OrderPage;
+export default memo(OrderPage);

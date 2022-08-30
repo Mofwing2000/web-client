@@ -1,5 +1,5 @@
 import { addDoc, collection, doc, getDoc, query, runTransaction, setDoc, updateDoc, where } from 'firebase/firestore';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { db } from '../../config/firebase.config';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import { Cart, CartState } from '../../models/cart';
@@ -141,7 +141,7 @@ const Checkout = () => {
     };
 
     useEffect(() => {
-        dispatch(fetchCartAsync.request());
+        if (!cart) dispatch(fetchCartAsync.request());
     }, []);
 
     useEffect(() => {
@@ -417,4 +417,4 @@ const Checkout = () => {
     );
 };
 
-export default Checkout;
+export default memo(Checkout);

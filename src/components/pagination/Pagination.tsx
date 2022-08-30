@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactPaginate, { ReactPaginateProps } from 'react-paginate';
 import './pagination.scss';
@@ -30,4 +30,4 @@ const Pagination: FC<PaginationProps> = (props) => {
     );
 };
 
-export default Pagination;
+export default memo(Pagination);

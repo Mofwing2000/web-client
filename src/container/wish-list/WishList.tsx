@@ -1,5 +1,5 @@
 import { collection, query } from 'firebase/firestore';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { memo, useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
@@ -58,7 +58,7 @@ const WishListPage = () => {
     }, [fetchProductQuery]);
 
     useEffect(() => {
-        dispatch(fetchWishListAsync.request());
+        if (!wishList) dispatch(fetchWishListAsync.request());
     }, []);
 
     return (
@@ -101,4 +101,4 @@ const WishListPage = () => {
     );
 };
 
-export default WishListPage;
+export default memo(WishListPage);

@@ -2,7 +2,7 @@ import { FirebaseError } from '@firebase/util';
 import { yupResolver } from '@hookform/resolvers/yup';
 import cuid from 'cuid';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -333,4 +333,4 @@ const UserManagePanel = () => {
     );
 };
 
-export default UserManagePanel;
+export default memo(UserManagePanel);

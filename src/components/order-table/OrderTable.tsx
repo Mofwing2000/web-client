@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { Order, OrderState } from '../../models/order';
 import '../../sass/common.scss';
 import ReactTooltip from 'react-tooltip';
@@ -173,4 +173,4 @@ const OrderTable = (props: Iprops) => {
     );
 };
 
-export default OrderTable;
+export default memo(OrderTable);
