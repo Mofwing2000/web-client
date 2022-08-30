@@ -9,13 +9,13 @@ import OrderFilterBar from '../../components/order-filter-bar/OrderFilterBar';
 import Pagination from '../../components/pagination/Pagination';
 import { db } from '../../config/firebase.config';
 import { useAppSelector } from '../../helpers/hooks';
-import AuthState from '../../models/auth';
 import { Order } from '../../models/order';
-import { selectAuth } from '../../store/root-reducer';
 import { PageLimit, PageOrder, PageOrderSort } from '../../type/page-type';
-
+import { UserState } from '../../models/user';
+import { selectUser } from '../../store/user/user.reducer';
+import '../../sass/common.scss';
 const OrderPage = () => {
-    const { currentUser, isAuthLoading } = useAppSelector<AuthState>(selectAuth);
+    const { user } = useAppSelector<UserState>(selectUser);
     const [ordersData, setOrdersData] = useState<Order[]>();
     const [pageSize, setPageSize] = useState<PageLimit>(10);
     const [sortType, setSortType] = useState<PageOrderSort>('orderDate');
@@ -45,11 +45,11 @@ const OrderPage = () => {
     }, [itemOffset, ordersData, pageSize]);
 
     useEffect(() => {
-        if (currentUser) {
+        if (user) {
             const orderRef = collection(db, 'order');
             const filterQuery = query(
                 orderRef,
-                where('userId', '==', currentUser.id),
+                where('userId', '==', user.id),
                 limit(pageSize as number),
                 orderBy(
                     sortType === 'orderDate' ? 'orderDate' : sortType === 'orderState' ? 'orderState' : 'totalAmount',
@@ -77,7 +77,7 @@ const OrderPage = () => {
             };
             fetchData();
         }
-    }, [pageSize, sortType, sortOrder, currentUser]);
+    }, [pageSize, sortType, sortOrder, user]);
 
     return (
         <>
@@ -100,12 +100,12 @@ const OrderPage = () => {
                     </div>
                 </div>
             ) : (
-                <div className="order-manage__filter text-center">
-                    <p>No data</p>
+                <div className="empty-content-container">
+                    <p className=" text-center">No data</p>
                 </div>
             )}
             <Pagination onPageChange={handlePageClick} pageCount={pageCount} />
-            {(isLoading || isAuthLoading) && <LoadingModal />}
+            {isLoading && <LoadingModal />}
         </>
     );
 };
