@@ -13,8 +13,6 @@ import { useTranslation } from 'react-i18next';
 import { CartItem } from '../../models/cart';
 import { addCartAsync } from '../../store/cart/cart.action';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
-import { selectAuth } from '../../store/root-reducer';
-import AuthState from '../../models/auth';
 import * as yup from 'yup';
 import { DEFAULT_USER_PHOTO_URL as defaultPhotoImg } from '../../constants/commons';
 import 'swiper/css/free-mode';
@@ -27,6 +25,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Comment, CommentItem } from '../../models/comment';
 import cuid from 'cuid';
 import { firebaseRelativeDateFormat } from '../../helpers/common';
+import { UserState } from '../../models/user';
+import { selectUser } from '../../store/user/user.reducer';
 
 interface CommentForm {
     content: string;
@@ -44,7 +44,7 @@ const Product = () => {
         .required();
     SwiperCore.use([Autoplay, Navigation, Thumbs]);
     const { productId } = useParams();
-    const { currentUser } = useAppSelector<AuthState>(selectAuth);
+    const { user } = useAppSelector<UserState>(selectUser);
     const [productData, setProductData] = useState<Top | Bottom>();
     const [thumbsSwiper, setThumbsSwiper] = useState<SwiperCore>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -52,6 +52,8 @@ const Product = () => {
     const [selectedSize, setSelectedSize] = useState<Size>();
     const [selectQuantity, setSelectQuantity] = useState<number>(1);
     const [commentData, setCommentData] = useState<Comment>();
+    const [currentIndex, setCurrentIndex] = useState<number>(5);
+
     const {
         register,
         handleSubmit,
@@ -59,6 +61,7 @@ const Product = () => {
         formState: { errors },
     } = useForm<CommentForm>({
         resolver: yupResolver(schema),
+        defaultValues: { content: '' },
     });
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -72,7 +75,7 @@ const Product = () => {
     }, []);
 
     const handleAddToCart = useCallback(() => {
-        if (!currentUser) {
+        if (!user) {
             navigate('/login');
             return 0;
         }
@@ -94,7 +97,7 @@ const Product = () => {
             }
             return 1;
         }
-    }, [selectedColor, selectedSize, selectQuantity, productData, currentUser]);
+    }, [selectedColor, selectedSize, selectQuantity, productData, user]);
 
     const unsub = useCallback(() => {
         if (productData) {
@@ -276,17 +279,17 @@ const Product = () => {
         setIsLoading(true);
         const commentItem: CommentItem = {
             id: cuid(),
-            userId: currentUser!.id,
-            userName: currentUser!.firstName + ' ' + currentUser!.lastName,
-            avatar: currentUser!.photoUrl,
+            userId: user!.id,
+            userName: user!.firstName + ' ' + user!.lastName,
+            avatar: user!.photoUrl,
             content: data.content,
             createdAt: new Date(Date.now()),
         };
         await sendComment(commentItem);
-        // reset({
-        //     content: '',
-        // });
         setIsLoading(false);
+        reset({
+            content: '',
+        });
     }, []);
 
     useEffect(() => {
@@ -408,7 +411,7 @@ const Product = () => {
                         </div>
 
                         <div className="product__comment">
-                            {currentUser ? (
+                            {user ? (
                                 <form onSubmit={handleSubmit(onSubmit)}>
                                     <div className="form-group">
                                         <label className="fs-4 mb-3" htmlFor="comment-textarea">
@@ -420,6 +423,7 @@ const Product = () => {
                                             id="comment-textarea"
                                             rows={3}
                                         ></textarea>
+                                        <p className="text-danger">{errors.content?.message}</p>
                                     </div>
                                     <button className="btn btn-primary mt-3 " type="submit">
                                         {t('common:comment')}
@@ -433,9 +437,8 @@ const Product = () => {
 
                             <div className="mt-5">
                                 <ul>
-                                    {commentData &&
-                                        commentData.commentItemList.length &&
-                                        commentData.commentItemList.map((commentItem, index) => (
+                                    {commentData && commentData.commentItemList.length ? (
+                                        commentData.commentItemList.slice(0, currentIndex).map((commentItem, index) => (
                                             <li key={index} className="product__comment__item">
                                                 <div className="product__comment__item__info d-flex gap-3 border-bottom mb-3 w-100">
                                                     <div className="d-flex flex-column flex-shrink-0">
@@ -451,9 +454,7 @@ const Product = () => {
                                                         ></img>
                                                         <p
                                                             className={`product__comment__item__info__user-name text-center mb-1 ${
-                                                                commentItem.userId === currentUser?.id
-                                                                    ? 'text-primary'
-                                                                    : ''
+                                                                commentItem.userId === user?.id ? 'text-primary' : ''
                                                             }`}
                                                         >
                                                             {commentItem.userName}
@@ -468,7 +469,7 @@ const Product = () => {
                                                         </p>
                                                         <button
                                                             className={`product__comment__item__main__btn btn btn-link ${
-                                                                commentItem.userId === currentUser?.id ? '' : 'd-none'
+                                                                commentItem.userId === user?.id ? '' : 'd-none'
                                                             }`}
                                                             onClick={() => handleCommentDelete(commentItem.id)}
                                                         >
@@ -477,7 +478,30 @@ const Product = () => {
                                                     </div>
                                                 </div>
                                             </li>
-                                        ))}
+                                        ))
+                                    ) : (
+                                        <></>
+                                    )}
+                                    {commentData && (
+                                        <p
+                                            className={`text-primary text-center fs-5 ${
+                                                currentIndex < commentData.commentItemList.length - 1 ? '' : 'd-none'
+                                            }`}
+                                            onClick={() => {
+                                                if (currentIndex + 5 < commentData.commentItemList.length)
+                                                    setCurrentIndex((prev) => prev + 5);
+                                                else {
+                                                    setCurrentIndex(
+                                                        (prev) =>
+                                                            prev +
+                                                            (commentData.commentItemList.length - 1 - currentIndex),
+                                                    );
+                                                }
+                                            }}
+                                        >
+                                            <u>Load more...</u>
+                                        </p>
+                                    )}
                                 </ul>
                             </div>
                         </div>
