@@ -9,7 +9,7 @@ import { DisplayModeState } from '../../models/display-mode';
 import { BottomCategory, TopCategory } from '../../models/product';
 import { UserState } from '../../models/user';
 import { logout } from '../../store/auth/auth.action';
-import { fetchCartAsync } from '../../store/cart/cart.action';
+import { clearCart, fetchCartAsync } from '../../store/cart/cart.action';
 import { selectCart } from '../../store/cart/cart.reducer';
 import { toggleDarkMode } from '../../store/dark-mode/dark-mode.action';
 import { selectDarkMode } from '../../store/dark-mode/dark-mode.reducer';
@@ -31,6 +31,8 @@ const Header = () => {
     const handleLogout = () => {
         dispatch(logout());
         dispatch(clearUser());
+        dispatch(clearWishList());
+        dispatch(clearCart());
     };
     const { i18n, t } = useTranslation(['common', 'header', 'product', 'order']);
 
@@ -72,17 +74,7 @@ const Header = () => {
     }, []);
 
     useEffect(() => {
-        if (user) {
-            dispatch(fetchWishListAsync.request());
-        }
-
-        return () => {
-            dispatch(clearWishList());
-        };
-    }, []);
-
-    useEffect(() => {
-        if (user) {
+        if (user && !cart) {
             dispatch(fetchCartAsync.request());
         }
     }, []);
@@ -205,7 +197,10 @@ const Header = () => {
                                 <div className="header__main__control__cart ">
                                     <i className="fa-solid fa-cart-shopping cursor-primary"></i>
                                     <p className="header__main__control__cart__number">
-                                        {(cart && cart.cartItems.length) || 0}
+                                        {useMemo(() => {
+                                            return (cart && cart.cartItems.length) || 0;
+                                        }, [cart])}
+                                        {/* {(cart && cart.cartItems.length) || 0} */}
                                     </p>
                                 </div>
                             </Link>

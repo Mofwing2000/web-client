@@ -44,3 +44,5 @@ export const clearCartAsync = createAsyncAction(
     CartActionType.CLEAR_CART_SUCCEED,
     CartActionType.CLEAR_CART_FAILED,
 )<void, Cart, string>();
+
+export const clearCart = createAction(CartActionType.CLEAR_CART_START)<void>();

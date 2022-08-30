@@ -20,4 +20,5 @@ export enum CartActionType {
     CLEAR_CART_START = 'cart/CLEAR_CART_START',
     CLEAR_CART_SUCCEED = 'cart/CLEAR_CART_SUCCEED',
     CLEAR_CART_FAILED = 'cart/CLEAR_CART_FAILED',
+    CLEAR_CART = 'cart/CLEAR_CART',
 }

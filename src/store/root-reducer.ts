@@ -25,7 +25,6 @@ const darkModePersistConfig = {
 const userPersistConfig = {
     key: 'user',
     storage: storage,
-    whiteList: ['user'],
 };
 
 const rootReducer = combineReducers({

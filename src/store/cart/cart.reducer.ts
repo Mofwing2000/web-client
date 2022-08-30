@@ -110,6 +110,11 @@ const cartReducer: Reducer<CartState, AnyAction> = createReducer(initState)
         ...state,
         isLoading: false,
         error: action.payload,
+    }))
+    .handleAction(CartActionType.CLEAR_CART, (state: CartState) => ({
+        ...state,
+        isLoading: false,
+        error: '',
     }));
 
 export default cartReducer;
