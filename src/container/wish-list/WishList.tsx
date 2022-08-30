@@ -10,7 +10,7 @@ import { ProductState } from '../../models/product';
 import { WishList, WishListState } from '../../models/wish-list';
 import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
 import { selectProduct } from '../../store/product/product.reducer';
-import { toggleWishListAsync } from '../../store/wish-list/wish-list.action';
+import { fetchWishListAsync, toggleWishListAsync } from '../../store/wish-list/wish-list.action';
 import { selectWishList } from '../../store/wish-list/wish-list.reducer';
 import './wish-list.scss';
 const WishListPage = () => {
@@ -56,6 +56,10 @@ const WishListPage = () => {
             dispatch(clearProducts());
         };
     }, [fetchProductQuery]);
+
+    useEffect(() => {
+        dispatch(fetchWishListAsync.request());
+    }, []);
 
     return (
         <>
