@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { db } from '../../config/firebase.config';
 import { Collection } from '../../models/collection';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper';
+import { EffectFade, Navigation } from 'swiper';
 import SwiperCore, { Autoplay } from 'swiper';
 import './hero.scss';
+import '../../sass/common.scss';
 import 'swiper/css/navigation';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -16,11 +17,12 @@ interface IProps {
 
 const Hero: FC<IProps> = (props) => {
     const { collectionsData } = props;
-    console.log(collectionsData);
+    SwiperCore.use([Navigation, Autoplay, EffectFade]);
+
     return (
         <div className="hero">
-            <Swiper loop={true} modules={[Navigation]}>
-                {collectionsData &&
+            <Swiper loop={true} modules={[Navigation, Autoplay, EffectFade]} autoplay={{ delay: 3000 }} effect={'fade'}>
+                {collectionsData.length ? (
                     collectionsData.map((item, index) => (
                         <SwiperSlide className="hero__swiper" key={index}>
                             <div
@@ -61,7 +63,10 @@ const Hero: FC<IProps> = (props) => {
                                 </div>
                             </div>
                         </SwiperSlide>
-                    ))}
+                    ))
+                ) : (
+                    <div className="empty-content-container"></div>
+                )}
             </Swiper>
         </div>
     );

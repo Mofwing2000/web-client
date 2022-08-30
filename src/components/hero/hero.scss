@@ -26,7 +26,7 @@
     }
 }
 
-@media only screen and (max-width: $xs) {
+@media only screen and (max-width: $sm) {
     .hero {
         &__swiper {
             height: 300px;
