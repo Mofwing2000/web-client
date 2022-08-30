@@ -1,15 +1,22 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { useAppDispatch } from '../helpers/hooks';
+import { useAppDispatch, useAppSelector } from '../helpers/hooks';
+import AuthState from '../models/auth';
 import { LoginInput } from '../models/form';
 import { loginAsync } from '../store/auth/auth.action';
+import { selectAuth } from '../store/root-reducer';
 
 const Login = () => {
     const { t } = useTranslation(['common', 'user']);
+    const { userToken } = useAppSelector<AuthState>(selectAuth);
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (userToken) navigate('/');
+    }, [userToken]);
     const schema = yup
         .object({
             email: yup
