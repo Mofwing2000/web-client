@@ -1,108 +1,119 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import Hero from '../../components/hero/Hero';
-import { collection, onSnapshot, query } from 'firebase/firestore';
+import { collection, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
 import { db } from '../../config/firebase.config';
 import { Collection, CollectionState } from '../../models/collection';
 import { Link, useNavigate } from 'react-router-dom';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
-import { FirebaseError } from '@firebase/util';
-import { toast } from 'react-toastify';
 import ProductItem from '../../components/product-item/ProductItem';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import { selectCollection } from '../../store/collection/collection.reducer';
 import { clearCollection, fetchColllectionsAsync } from '../../store/collection/collection.action';
-import deliImg from '../../assets/image/services1.svg';
-import secureImg from '../../assets/image/services2.svg';
-import paymentImg from '../../assets/image/services2.svg';
-import handleImg from '../../assets/image/services4.svg';
+import { ProductState } from '../../models/product';
+import { selectProduct } from '../../store/product/product.reducer';
+import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
+import { WishList, WishListState } from '../../models/wish-list';
+import { selectWishList } from '../../store/wish-list/wish-list.reducer';
+import { fetchWishListAsync, toggleWishListAsync } from '../../store/wish-list/wish-list.action';
 const Home = () => {
-    // const [collectionsData, setCollectionsData] = useState<Collection[]>();
-    // const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
+    const { wishList, isWishListLoading } = useAppSelector<WishListState>(selectWishList);
     const dispatch = useAppDispatch();
     const { collections, isCollectionLoading } = useAppSelector<CollectionState>(selectCollection);
     const { t } = useTranslation(['common', 'collection']);
     const fetchQuery = query(collection(db, 'collection'));
+    const productFetchQuery = query(collection(db, 'product'), orderBy('createdAt', 'desc'), limit(8));
+
+    const isLoading = useMemo(() => {
+        return isProductLoading || isWishListLoading || isCollectionLoading;
+    }, [isProductLoading, isWishListLoading, isCollectionLoading]);
+
+    const handleToggleWishList = useCallback((productId: string) => {
+        dispatch(toggleWishListAsync.request(productId));
+    }, []);
+
     useEffect(() => {
         dispatch(fetchColllectionsAsync.request(fetchQuery));
         return () => {
             dispatch(clearCollection());
         };
     }, []);
-    const navigate = useNavigate();
-    // useEffect(() => {
-    //     setIsLoading(true);
-    //     const productQuery = query(collection(db, 'collection'));
-    //     const unsub = onSnapshot(
-    //         productQuery,
-    //         (snapShot) => {
-    //             let list: Array<Collection> = [];
-    //             snapShot.docs.forEach((docItem) => {
-    //                 list.push({ ...docItem.data() } as Collection);
-    //             });
-    //             setCollectionsData(list);
-    //             setIsLoading(false);
-    //         },
-    //         (error) => {
-    //             if (error instanceof FirebaseError) toast.error(error.message);
-    //             setIsLoading(false);
-    //         },
-    //     );
 
-    //     return () => {
-    //         unsub();
-    //     };
-    // }, []);
+    useEffect(() => {
+        dispatch(fetchProductsAsync.request(productFetchQuery));
+        return () => {
+            dispatch(clearProducts());
+        };
+    }, []);
+
+    useEffect(() => {
+        dispatch(fetchWishListAsync.request());
+    }, []);
+    const latestProductRender = useMemo(
+        () =>
+            products.length > 0 &&
+            products.map((item, index) => (
+                <div className="col-md-3 col-sm-6" key={index}>
+                    <ProductItem
+                        product={item}
+                        onToggleWishList={() => handleToggleWishList(item.id)}
+                        isLiked={wishList !== null && (wishList as WishList).productIdList.includes(item.id)}
+                    />
+                </div>
+            )),
+        [products, wishList],
+    );
 
     const heroComponent = useMemo(() => collections && <Hero collectionsData={collections} />, [collections]);
     return (
         <>
             <div>
                 {heroComponent}
-                <div className="categories-area section-padding40 gray-bg">
-                    <div className="container-fluid">
+                <div className="customer-service my-5">
+                    <div className="container">
                         <div className="row">
                             <div className="col-lg-3 col-md-6 col-sm-6">
-                                <div className="single-cat mb-50 wow fadeInUp">
-                                    <div className="cat-icon">
-                                        <img src={deliImg} alt="" />
+                                <div className=" px-2 py-3">
+                                    <div className=" mb-3">
+                                        <i className="fa-solid fa-truck-fast fs-1"></i>
                                     </div>
                                     <div className="cat-cap">
-                                        <h5>Fast Delivery</h5>
-                                        <p>
-                                            Reasonable price delivery fast and professional service excellent technology
-                                            support
-                                        </p>
+                                        <h5 className="fw-bold">Fast Delivery</h5>
+                                        <p>Reasonable price, delivery fast</p>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-lg-3 col-md-6 col-sm-6">
-                                <div className="single-cat mb-50 wow fadeInUp">
-                                    <div className="cat-icon"></div>
+                                <div className=" px-2 py-3">
+                                    <div className=" mb-3">
+                                        <i className="fa-solid fa-user-shield fs-1"></i>
+                                    </div>
+
                                     <div className="cat-cap">
-                                        <h5>Secure Infomation</h5>
-                                        <p>We guarantee that all customers&apos; information are 100% secured</p>
+                                        <h5 className="fw-bold">Secure Infomation</h5>
+                                        <p>All customers&apos; inhtmlFormation are 100% secured</p>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-lg-3 col-md-6 col-sm-6">
-                                <div className="single-cat mb-50 wow fadeInUp">
-                                    <div className="cat-icon">
-                                        <img src={paymentImg} alt="" />
+                                <div className=" px-2 py-3">
+                                    <div className=" mb-3">
+                                        <i className="fa-regular fa-credit-card fs-1"></i>
                                     </div>
                                     <div className="cat-cap">
-                                        <h5>Fast &amp; Free Delivery</h5>
+                                        <h5 className="fw-bold">Fast &amp; Free Delivery</h5>
                                         <p>Free delivery on all orders</p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-lg-3 col-md-6 col-sm-6">
+                            <div className="col-lg-3 col-md-6 col-sm-6 px-2 py-3">
                                 <div className="single-cat mb-30 wow fadeInUp">
-                                    <div className="cat-icon">
-                                        <img src={handleImg} alt="" />
+                                    <div className=" mb-3">
+                                        <i className="fa-solid fa-headset fs-1"></i>
                                     </div>
                                     <div className="cat-cap">
-                                        <h5>Fast &amp; Free Delivery</h5>
+                                        <h5 className="fw-bold">Fast &amp; Free Delivery</h5>
                                         <p>Free delivery on all orders</p>
                                     </div>
                                 </div>
@@ -110,11 +121,27 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-3">{/* <ProductItem /> */}</div>
+                <div className="container">
+                    <div className="row">
+                        <>
+                            <h3 className="text-center">New Arrival</h3>
+                            {latestProductRender}
+                        </>
+                    </div>
+                </div>
+                <div className="banner-bottom pb-3 position-relative d-none d-md-block">
+                    <div className="d-block text-center">
+                        <img
+                            data-sizes="auto"
+                            src="https://img.cdn.vncdn.io/nvn/ncdn/store/16762/bn/bannerchan.png"
+                            data-src="https://img.cdn.vncdn.io/nvn/ncdn/store/16762/bn/bannerchan.png"
+                            alt="banner"
+                            sizes="1110px"
+                        />
+                    </div>
                 </div>
             </div>
-            {isCollectionLoading && (
+            {isLoading && (
                 <>
                     <LoadingModal />
                     <div className="empty-content-container"></div>
