@@ -4,17 +4,15 @@ import { ToastContainer } from 'react-toastify';
 import { useAppSelector } from './helpers/hooks';
 import MainLayout from './layout/MainLayout';
 import { DisplayModeState } from './models/display-mode';
-import Login from './pages/Login';
-import AdminRoute from './routes/AdminRoute';
+import Login from './container/Login';
 import PrivateRoute from './routes/PrivateRoute';
 import { selectDarkMode } from './store/dark-mode/dark-mode.reducer';
 import 'react-toastify/dist/ReactToastify.css';
-// import 'swiper/css';
+import 'swiper/css';
 import './App.scss';
-import ForgotPassword from './pages/ForgotPassword';
-import Signup from './pages/Signup';
+import ForgotPassword from './container/ForgotPassword';
+import Signup from './container/Signup';
 import Home from './container/home/Home';
-import WithSidebar from './layout/with-sidebar/WithSidebar';
 import Catalog from './container/catalog/Catalog';
 import Product from './container/product/Product';
 import Cart from './container/cart/Cart';
@@ -26,6 +24,7 @@ import SearchPage from './container/search/SearchPage';
 import OrderDetail from './container/order-detail/OrderDetail';
 import OrderPage from './container/order-page/OrderPage';
 import UserProfile from './container/user-profile/UserProfile';
+import About from './container/about/About';
 
 function App() {
     const { mode } = useAppSelector<DisplayModeState>(selectDarkMode);
@@ -44,7 +43,7 @@ function App() {
                         <Route path="search" element={<SearchPage />}></Route>
                         <Route path="product/:productId" element={<Product />}></Route>
                         <Route path="collection/:collectionId" element={<CollectionPage />}></Route>
-                        <Route path="about" element={<Home />}></Route>
+                        <Route path="about" element={<About />}></Route>
                         <Route
                             path="shopping-cart"
                             element={
