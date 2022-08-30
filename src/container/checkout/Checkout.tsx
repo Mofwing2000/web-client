@@ -2,14 +2,12 @@ import { addDoc, collection, doc, getDoc, query, runTransaction, setDoc, updateD
 import React, { useEffect, useMemo, useState } from 'react';
 import { db } from '../../config/firebase.config';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
-import AuthState from '../../models/auth';
 import { Cart, CartState } from '../../models/cart';
 import { Bottom, Product, ProductState, Top } from '../../models/product';
 import { clearCartAsync, fetchCartAsync } from '../../store/cart/cart.action';
 import { selectCart } from '../../store/cart/cart.reducer';
 import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
 import { selectProduct } from '../../store/product/product.reducer';
-import { selectAuth } from '../../store/root-reducer';
 import { Order, OrderedItem, OrderState, PaymentMethod, ShippingClass, ShippingType } from '../../models/order';
 import './checkout.scss';
 import cuid from 'cuid';
@@ -17,16 +15,18 @@ import { toast } from 'react-toastify';
 import { FirebaseError } from '@firebase/util';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
 import { Link } from 'react-router-dom';
+import { UserState } from '../../models/user';
+import { selectUser } from '../../store/user/user.reducer';
 
 const Checkout = () => {
-    const { currentUser } = useAppSelector<AuthState>(selectAuth);
+    const { user } = useAppSelector<UserState>(selectUser);
     const { cart, isCartLoading } = useAppSelector<CartState>(selectCart);
     const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
     const [shippingType, setShippingType] = useState<ShippingType>({
         shippingClass: ShippingClass.ECONOMY,
         price: 5,
     });
-    const [shippingAddress, setShippingAddress] = useState<string>(currentUser!.address);
+    const [shippingAddress, setShippingAddress] = useState<string>(user!.address);
     const [note, setNote] = useState<string>('');
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PaymentMethod.COD);
     const dispatch = useAppDispatch();
@@ -103,11 +103,11 @@ const Checkout = () => {
                     setIsCreatingOrder(false);
                     return;
                 } else {
-                    if (currentUser && cart && subTotal) {
+                    if (user && cart && subTotal) {
                         const docRef = doc(collection(db, 'order'));
                         const order: Order = {
                             id: docRef.id,
-                            userId: currentUser.id,
+                            userId: user.id,
                             orderedProducts: cart.cartItems as OrderedItem[],
                             shippingAddress,
                             shippingType,
@@ -169,7 +169,7 @@ const Checkout = () => {
                                                     <input
                                                         className="form-input"
                                                         type="text"
-                                                        value={currentUser?.firstName}
+                                                        value={user?.firstName}
                                                         disabled
                                                     />
                                                 </div>
@@ -182,7 +182,7 @@ const Checkout = () => {
                                                     <input
                                                         className="form-input"
                                                         type="text"
-                                                        value={currentUser?.lastName}
+                                                        value={user?.lastName}
                                                         disabled
                                                     />
                                                 </div>
@@ -197,7 +197,7 @@ const Checkout = () => {
                                                     <input
                                                         className="form-input"
                                                         type="text"
-                                                        value={currentUser?.phoneNumber}
+                                                        value={user?.phoneNumber}
                                                         disabled
                                                     />
                                                 </div>
@@ -210,7 +210,7 @@ const Checkout = () => {
                                                     <input
                                                         className="form-input"
                                                         type="text"
-                                                        value={currentUser?.email}
+                                                        value={user?.email}
                                                         disabled
                                                     />
                                                 </div>
@@ -229,7 +229,7 @@ const Checkout = () => {
                                                 onChange={(e) => setShippingAddress(e.target.value)}
                                                 onBlur={(e) => {
                                                     if (e.target.value.trim() === '')
-                                                        if (currentUser) e.target.value = currentUser.address;
+                                                        if (user) e.target.value = user.address;
                                                 }}
                                             />
                                         </div>

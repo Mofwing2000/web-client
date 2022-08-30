@@ -7,7 +7,7 @@ export const loginAsync = createAsyncAction(
     AuthActionsType.LOGIN_START,
     AuthActionsType.LOGIN_START_SUCCEED,
     AuthActionsType.LOGIN_START_FAIL,
-)<LoginInput, { user: User; token: string }, string>();
+)<LoginInput, { token: string }, string>();
 
 export const signupAsync = createAsyncAction(
     AuthActionsType.SIGNUP_START,

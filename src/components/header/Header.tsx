@@ -4,31 +4,33 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../assets/image/logo.png';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
-import AuthState from '../../models/auth';
 import { CartState } from '../../models/cart';
 import { DisplayModeState } from '../../models/display-mode';
 import { BottomCategory, TopCategory } from '../../models/product';
+import { UserState } from '../../models/user';
 import { logout } from '../../store/auth/auth.action';
 import { fetchCartAsync } from '../../store/cart/cart.action';
 import { selectCart } from '../../store/cart/cart.reducer';
 import { toggleDarkMode } from '../../store/dark-mode/dark-mode.action';
 import { selectDarkMode } from '../../store/dark-mode/dark-mode.reducer';
-import { selectAuth } from '../../store/root-reducer';
+import { clearUser } from '../../store/user/user.action';
+import { selectUser } from '../../store/user/user.reducer';
 import { clearWishList, fetchWishListAsync } from '../../store/wish-list/wish-list.action';
 import LoadingModal from '../loading-modal/LoadingModal';
 import './header.scss';
 
 const Header = () => {
-    const { currentUser, isAuthLoading } = useAppSelector<AuthState>(selectAuth);
+    const { user, isUserLoading } = useAppSelector<UserState>(selectUser);
     const { mode } = useAppSelector<any>(selectDarkMode) as DisplayModeState;
     const { cart, isCartLoading } = useAppSelector<CartState>(selectCart);
     const [isShowSidebar, setIsShowSidebar] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const isLoading = useMemo(() => isAuthLoading || isCartLoading, [isAuthLoading, isCartLoading]);
+    const isLoading = useMemo(() => isCartLoading, [isUserLoading]);
     const [isShowSearch, setIsShowSearch] = useState<boolean>(false);
     const handleLogout = () => {
         dispatch(logout());
+        dispatch(clearUser());
     };
     const { i18n, t } = useTranslation(['common', 'header', 'product', 'order']);
 
@@ -60,7 +62,7 @@ const Header = () => {
         { title: `${t('header:about')}`, url: '/about' },
     ];
     useEffect(() => {
-        if (currentUser) {
+        if (user) {
             dispatch(fetchWishListAsync.request());
             dispatch(fetchCartAsync.request());
         }
@@ -70,7 +72,7 @@ const Header = () => {
     }, []);
 
     useEffect(() => {
-        if (currentUser) {
+        if (user) {
             dispatch(fetchWishListAsync.request());
         }
 
@@ -80,14 +82,14 @@ const Header = () => {
     }, []);
 
     useEffect(() => {
-        if (currentUser) {
+        if (user) {
             dispatch(fetchCartAsync.request());
         }
     }, []);
 
     return (
         <>
-            <header className="header position-md-fixed p-0">
+            <header className="header position-fixed p-0">
                 <div className="bg-black w-100">
                     <div className="header--top container d-none d-md-flex py-2 px-4 justify-content-end align-items-center">
                         <div className="d-flex gap-3 align-items-center cursor">
@@ -113,14 +115,14 @@ const Header = () => {
                                 <option value="vn">Tiếng Việt</option>
                             </select>
                             <div className="header--top__user dropdown text-dark d-flex align-items-center cursor">
-                                {currentUser ? (
+                                {user ? (
                                     <>
                                         <p
                                             className="m-0 text-white"
                                             id="dropdownUserIcon"
                                             data-bs-toggle="dropdown"
                                             aria-expanded="false"
-                                        >{`${currentUser.firstName} ${currentUser.lastName},`}</p>
+                                        >{`${user.firstName} ${user.lastName},`}</p>
                                         <ul
                                             className="header__nav__control--dropdown__menu dropdown-menu dropdown-menu-end px-3 "
                                             aria-labelledby="dropdownUserIcon"
@@ -242,14 +244,14 @@ const Header = () => {
                             <option value="vn">Tiếng Việt</option>
                         </select>
                         <div className="header--top__user dropdown text-black d-flex align-items-center cursor">
-                            {currentUser ? (
+                            {user ? (
                                 <>
                                     <p
                                         className="m-0 text-dark"
                                         id="dropdownUserIcon"
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false"
-                                    >{`${currentUser.firstName} ${currentUser.lastName},`}</p>
+                                    >{`${user.firstName} ${user.lastName},`}</p>
                                     <ul
                                         className="header__nav__control--dropdown__menu dropdown-menu dropdown-menu-end px-3 "
                                         aria-labelledby="dropdownUserIcon"

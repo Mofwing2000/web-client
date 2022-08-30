@@ -11,14 +11,13 @@ import * as yup from 'yup';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
 import { storage } from '../../config/firebase.config';
 import { DEFAULT_USER_PHOTO_URL as defaultPhotoUrl } from '../../constants/commons';
-import { useAppSelector } from '../../helpers/hooks';
-import AuthState from '../../models/auth';
-import { User } from '../../models/user';
-import { selectAuth } from '../../store/root-reducer';
+import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
+import { User, UserState } from '../../models/user';
+import { fetchUserAsync, updateUserAsync } from '../../store/user/user.action';
+import { selectUser } from '../../store/user/user.reducer';
 import './user-profile.scss';
 
 interface FormValue {
-    email: string;
     firstName: string;
     lastName: string;
     password: string;
@@ -27,8 +26,9 @@ interface FormValue {
 }
 
 const UserManagePanel = () => {
-    const { currentUser } = useAppSelector<AuthState>(selectAuth);
+    const { user, isUserLoading } = useAppSelector<UserState>(selectUser);
     const { t } = useTranslation(['common', 'user']);
+    const dispatch = useAppDispatch();
     const schema = yup
         .object({
             firstName: yup
@@ -67,27 +67,24 @@ const UserManagePanel = () => {
     const navigate = useNavigate();
 
     const userFormValueData = useMemo(() => {
-        if (currentUser)
+        if (user)
             return {
-                email: currentUser.email,
-                firstName: currentUser.firstName,
-                lastName: currentUser.lastName,
-                password: currentUser.password,
-                phoneNumber: currentUser.phoneNumber,
-                address: currentUser.address,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                password: user.password,
+                phoneNumber: user.phoneNumber,
+                address: user.address,
             };
-    }, [currentUser]);
+    }, [user]);
     const {
         register,
         handleSubmit,
-        reset,
-        formState,
-        formState: { errors, isSubmitSuccessful },
+        formState: { errors },
     } = useForm<FormValue>({
         resolver: yupResolver(schema),
         defaultValues: { ...userFormValueData },
     });
-    const [userFormValue, setUserFormValue] = useState<User>({ ...currentUser! });
+    const [userFormValue, setUserFormValue] = useState<User>({ ...user! });
 
     function isFileImage(file: File) {
         return file && file.type.split('/')[0] === 'image';
@@ -165,10 +162,12 @@ const UserManagePanel = () => {
     //         reset({ ...user });
     //     }
     // }, [formState, userFormValue, reset]);
-    const onSubmit = () => {};
+    const onSubmit = async () => {
+        dispatch(updateUserAsync.request(userFormValue));
+    };
     return (
         <>
-            {currentUser && (
+            {user && (
                 <div className="manage-user card">
                     <form className="manage-user__form" onSubmit={handleSubmit(onSubmit)} noValidate>
                         <div className="manage-user__form__upload">
@@ -176,7 +175,7 @@ const UserManagePanel = () => {
                                 className="manage-user__form__upload__img overflow-hidden d-flex justify-content-center align-items-center"
                                 style={{
                                     backgroundImage: `url(${
-                                        userFormValue.photoUrl || currentUser.photoUrl || defaultPhotoUrl
+                                        userFormValue.photoUrl || user.photoUrl || defaultPhotoUrl
                                     })`,
                                 }}
                             ></div>
@@ -212,7 +211,6 @@ const UserManagePanel = () => {
                                     placeholder="abc@gmail.com"
                                     disabled
                                 />
-                                {<p>{errors.email?.message}</p>}
                             </div>
                             <div className="form-group col-6">
                                 <label htmlFor="password">{t('user:password')}:</label>
@@ -220,7 +218,7 @@ const UserManagePanel = () => {
                                     type="password"
                                     className="form-control"
                                     id="password"
-                                    // defaultValue={currentUser.password}
+                                    // defaultValue={user.password}
                                     value={userFormValue.password}
                                     aria-describedby="password"
                                     {...register('password', {
@@ -236,7 +234,7 @@ const UserManagePanel = () => {
                                     type="text"
                                     className="form-control"
                                     id="firstName"
-                                    // defaultValue={currentUser.firstName}
+                                    // defaultValue={user.firstName}
                                     value={userFormValue.firstName}
                                     aria-describedby="fist name"
                                     placeholder="John"
@@ -252,7 +250,7 @@ const UserManagePanel = () => {
                                     type="text"
                                     className="form-control"
                                     id="lastName"
-                                    // defaultValue={currentUser.lastName}
+                                    // defaultValue={user.lastName}
                                     value={userFormValue.lastName}
                                     aria-describedby="last name"
                                     placeholder="Wick"
@@ -268,7 +266,7 @@ const UserManagePanel = () => {
                                     type="text"
                                     className="form-control"
                                     id="phone"
-                                    // defaultValue={currentUser.phoneNumber}
+                                    // defaultValue={user.phoneNumber}
                                     value={userFormValue.phoneNumber}
                                     aria-describedby="phone number"
                                     placeholder="0921341215"
@@ -284,7 +282,7 @@ const UserManagePanel = () => {
                                     type="text"
                                     className="form-control"
                                     id="address"
-                                    // defaultValue={currentUser.address}
+                                    // defaultValue={user.address}
                                     value={userFormValue.address}
                                     aria-describedby="address"
                                     placeholder="Hanoi"
@@ -330,7 +328,7 @@ const UserManagePanel = () => {
                 </div>
             )}
 
-            {isLoading && <LoadingModal />}
+            {isUserLoading && <LoadingModal />}
         </>
     );
 };

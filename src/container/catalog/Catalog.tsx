@@ -1,44 +1,30 @@
-import { getValue } from '@testing-library/user-event/dist/types/utils';
 import { collection, orderBy, query, where } from 'firebase/firestore';
+import queryString from 'query-string';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createSearchParams, Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
+import Pagination from '../../components/pagination/Pagination';
+import ProductFilterBar from '../../components/product-filter-bar/ProductFilterBar';
 import ProductItem from '../../components/product-item/ProductItem';
 import { db } from '../../config/firebase.config';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
-import AuthState from '../../models/auth';
-import { CartItem } from '../../models/cart';
-import {
-    Bottom,
-    BottomCategory,
-    Color,
-    Product,
-    ProductState,
-    ProductType,
-    Size,
-    Top,
-    TopCategory,
-} from '../../models/product';
+import { Bottom, BottomCategory, Color, ProductState, ProductType, Size, Top, TopCategory } from '../../models/product';
+import { UserState } from '../../models/user';
 import { WishList, WishListState } from '../../models/wish-list';
 import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
 import { selectProduct } from '../../store/product/product.reducer';
-import { selectAuth } from '../../store/root-reducer';
-import { toggleWishListAsync } from '../../store/wish-list/wish-list.action';
+import { selectUser } from '../../store/user/user.reducer';
+import { fetchWishListAsync, toggleWishListAsync } from '../../store/wish-list/wish-list.action';
 import { selectWishList } from '../../store/wish-list/wish-list.reducer';
 import { PageLimit, PageOrder, PageProductSort } from '../../type/page-type';
-import queryString from 'query-string';
 import './catalog.scss';
-import ReactPaginate from 'react-paginate';
-import Pagination from '../../components/pagination/Pagination';
-import ProductFilterBar from '../../components/product-filter-bar/ProductFilterBar';
 
 const Catalog = () => {
     const { type } = useParams();
-    const { search } = useLocation();
     const { t } = useTranslation(['common', 'product']);
     const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
-    const { currentUser } = useAppSelector<AuthState>(selectAuth);
+    const { user } = useAppSelector<UserState>(selectUser);
     const { wishList, isWishListLoading } = useAppSelector<WishListState>(selectWishList);
     const [currentFilteredProducts, setCurrentFilteredProducts] = useState<(Top | Bottom)[]>([]);
     const [pageCount, setPageCount] = useState<number>(0);
@@ -46,6 +32,7 @@ const Catalog = () => {
     const [pageSize, setPageSize] = useState<PageLimit>(10);
     const [sortType, setSortType] = useState<PageProductSort>('id');
     const [sortOrder, setSortOrder] = useState<PageOrder>('asc');
+
     const [category, setCategory] = useState<TopCategory | BottomCategory | null>(() => {
         if (typeof queryString.parse(location.search).category === 'string') {
             return queryString.parse(location.search).category as TopCategory | BottomCategory;
@@ -141,10 +128,10 @@ const Catalog = () => {
 
     const handleToggleWishList = useCallback(
         (productId: string) => {
-            if (currentUser) dispatch(toggleWishListAsync.request(productId));
+            if (user) dispatch(toggleWishListAsync.request(productId));
             else navigate('/login');
         },
-        [currentUser],
+        [user],
     );
 
     const handleColorToggle = useCallback(
@@ -175,7 +162,7 @@ const Catalog = () => {
                     <ProductItem
                         product={product}
                         onToggleWishList={() => handleToggleWishList(product.id)}
-                        isLiked={wishList !== null && (wishList as WishList).productIdList.includes(product.id)}
+                        isLiked={wishList !== null && wishList.productIdList.includes(product.id)}
                     />
                 </div>
             ));
@@ -219,6 +206,10 @@ const Catalog = () => {
             dispatch(clearProducts());
         };
     }, [fetchProductQuery]);
+
+    useEffect(() => {
+        dispatch(fetchWishListAsync.request());
+    }, []);
 
     return (
         <>

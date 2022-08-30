@@ -7,6 +7,7 @@ import AuthState from '../../models/auth';
 import { Cart, CartItem } from '../../models/cart';
 import { User } from '../../models/user';
 import { selectAuth } from '../root-reducer';
+import { selectUser } from '../user/user.reducer';
 import {
     addCartAsync,
     changeQuantityCartAsync,
@@ -25,8 +26,8 @@ async function fetchCart(id: string) {
 
 function* fetchCartGen() {
     try {
-        const { currentUser }: ReturnType<typeof selectAuth> = yield select(selectAuth);
-        const wishList: Cart = yield call(fetchCart, (currentUser as User).id);
+        const { user }: ReturnType<typeof selectUser> = yield select(selectUser);
+        const wishList: Cart = yield call(fetchCart, (user as User).id);
         yield put(fetchCartAsync.success(wishList));
     } catch (error) {
         if (error instanceof FirebaseError) {
@@ -50,7 +51,7 @@ async function addCart(cartItem: CartItem, cart: Cart) {
 function* addCartGen(action: ReturnType<typeof addCartAsync.request>) {
     try {
         const cartItem = action.payload;
-        // const { currentUser } = yield select(selectAuth);
+        // const { user } = yield select(selectAuth);
         const { cart }: ReturnType<typeof selectCart> = yield select(selectCart);
         if (cart) {
             if (
@@ -88,7 +89,7 @@ async function removeCart(cartItem: CartItem, cart: Cart) {
 function* removeCartGen(action: ReturnType<typeof removeCartAsync.request>) {
     try {
         const cartItem = action.payload;
-        // const { currentUser } = yield select(selectAuth);
+        // const { user } = yield select(selectAuth);
         const { cart }: ReturnType<typeof selectCart> = yield select(selectCart);
         if (cart) {
             const cartData: Cart = yield call(removeCart, cartItem, cart);
@@ -121,7 +122,7 @@ async function increaseCart(cartItem: CartItem, cart: Cart) {
 function* increaseCartGen(action: ReturnType<typeof increaseCartAsync.request>) {
     try {
         const cartItem = action.payload;
-        // const { currentUser } = yield select(selectAuth);
+        // const { user } = yield select(selectAuth);
         const { cart }: ReturnType<typeof selectCart> = yield select(selectCart);
         if (cart) {
             const cartData: Cart = yield call(increaseCart, cartItem, cart);
@@ -153,7 +154,7 @@ async function changeQuantityCart(cartItem: CartItem, newQuantity: number, cart:
 function* changeQuantityCartGen(action: ReturnType<typeof changeQuantityCartAsync.request>) {
     try {
         const { cartItem, newQuantity } = action.payload;
-        // const { currentUser } = yield select(selectAuth);
+        // const { user } = yield select(selectAuth);
         const { cart }: ReturnType<typeof selectCart> = yield select(selectCart);
         if (cart) {
             const cartData: Cart = yield call(changeQuantityCart, cartItem, newQuantity, cart);
@@ -185,7 +186,7 @@ async function decreaseCart(cartItem: CartItem, cart: Cart) {
 function* decreaseCartGen(action: ReturnType<typeof decreaseCartAsync.request>) {
     try {
         const cartItem = action.payload;
-        // const { currentUser } = yield select(selectAuth);
+        // const { user } = yield select(selectAuth);
         const { cart }: ReturnType<typeof selectCart> = yield select(selectCart);
         if (cart) {
             const cartData: Cart = yield call(decreaseCart, cartItem, cart);

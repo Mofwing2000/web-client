@@ -7,14 +7,8 @@ import { AuthActionsType } from '../../type/auth';
 const initialState: AuthState = {
     isAuthLoading: false,
     error: null,
-    currentUser: null,
     userToken: null,
 };
-
-interface IAction {
-    type: string;
-    payload: any;
-}
 
 const authReducer: Reducer<AuthState, AnyAction> = createReducer(initialState)
     .handleAction(AuthActionsType.SIGNUP_START, (state: AuthState) => ({ ...state, isLoading: true }))
@@ -30,11 +24,9 @@ const authReducer: Reducer<AuthState, AnyAction> = createReducer(initialState)
     .handleAction(AuthActionsType.LOGIN_START, (state: AuthState) => ({ ...state, isLoading: true }))
     .handleAction(
         AuthActionsType.LOGIN_START_SUCCEED,
-        (state: AuthState, action: PayloadAction<{ user: User; token: string }>) => ({
+        (state: AuthState, action: PayloadAction<{ token: string }>) => ({
             ...state,
             isLoading: false,
-            isLogged: true,
-            currentUser: action.payload.user,
             userToken: action.payload.token,
         }),
     )
@@ -46,8 +38,6 @@ const authReducer: Reducer<AuthState, AnyAction> = createReducer(initialState)
     .handleAction(AuthActionsType.LOGOUT, (state: AuthState) => ({
         ...state,
         isLoading: false,
-        isLogged: false,
-        currentUser: null,
         userToken: null,
         error: null,
     }));

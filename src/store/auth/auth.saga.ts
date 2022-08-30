@@ -10,21 +10,15 @@ import { DEFAULT_USER_PHOTO_URL as defaultAvatar } from '../../constants/commons
 import { User } from '../../models/user';
 import { WishList } from '../../models/wish-list';
 import { Cart } from '../../models/cart';
+import { fetchUserAsync } from '../user/user.action';
 
 async function loginFirebase(email: string, password: string) {
-    console.log(email, password);
     return signInWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
-        console.log(userCredential.user.uid);
         const userToken = await userCredential.user.getIdToken();
         const docRef = doc(db, 'user', userCredential.user.uid);
         const docSnap = await getDoc(docRef);
-        console.log('logged');
-        console.log({
-            user: { ...docSnap.data() },
-            token: userToken,
-        });
         return {
-            user: { ...docSnap.data() },
+            user: { ...docSnap.data() } as User,
             token: userToken,
         };
     });
@@ -33,8 +27,15 @@ async function loginFirebase(email: string, password: string) {
 function* login(action: ReturnType<typeof loginAsync.request>) {
     try {
         const { email, password } = action.payload;
-        const { user, token } = yield call(loginFirebase, email, password);
-        yield put(loginAsync.success({ user, token }));
+        const {
+            user,
+            token,
+        }: {
+            user: User;
+            token: string;
+        } = yield call(loginFirebase, email, password);
+        yield put(loginAsync.success({ token }));
+        yield put(fetchUserAsync.success(user));
         yield put(push('/'));
     } catch (error) {
         if (error instanceof FirebaseError) {

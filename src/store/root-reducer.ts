@@ -9,6 +9,7 @@ import collectionReducer from './collection/collection.reducer';
 import productReducer from './product/product.reducer';
 import wishListReducer from './wish-list/wish-list.reducer';
 import cartReducer from './cart/cart.reducer';
+import userReducer from './user/user.reducer';
 
 const authPersistConfig = {
     key: 'auth',
@@ -21,6 +22,12 @@ const darkModePersistConfig = {
     storage: storage,
 };
 
+const userPersistConfig = {
+    key: 'user',
+    storage: storage,
+    whiteList: ['user'],
+};
+
 const rootReducer = combineReducers({
     auth: persistReducer(authPersistConfig, authReducer),
     darkMode: persistReducer(darkModePersistConfig, darkModeReducer),
@@ -29,6 +36,7 @@ const rootReducer = combineReducers({
     collection: collectionReducer,
     cart: cartReducer,
     router: routerReducer,
+    user: persistReducer(userPersistConfig, userReducer),
 });
 
 export default rootReducer;

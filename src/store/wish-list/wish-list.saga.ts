@@ -7,6 +7,7 @@ import { User } from '../../models/user';
 import { WishList } from '../../models/wish-list';
 import { selectCart } from '../cart/cart.reducer';
 import { selectAuth } from '../root-reducer';
+import { selectUser } from '../user/user.reducer';
 import { fetchWishListAsync, toggleWishListAsync } from './wish-list.action';
 import { selectWishList } from './wish-list.reducer';
 
@@ -17,9 +18,9 @@ async function fetchWishList(id: string) {
 
 function* fetchWishListGen() {
     try {
-        const { currentUser }: ReturnType<typeof selectAuth> = yield select(selectAuth);
-        if (currentUser) {
-            const wishList: WishList = yield call(fetchWishList, currentUser.id);
+        const { user }: ReturnType<typeof selectUser> = yield select(selectUser);
+        if (user) {
+            const wishList: WishList = yield call(fetchWishList, user.id);
             yield put(fetchWishListAsync.success(wishList));
         }
     } catch (error) {
@@ -38,7 +39,7 @@ async function toggleWishList(id: string, wishList: WishList) {
         await updateDoc(doc(db, 'wishList', wishList.id), {
             productIdList: [...newProductsList],
         });
-        toast.success('Removed to wishList');
+        toast.success('Removed from wishList');
     } else {
         newProductsList = [...wishList.productIdList, id];
         await updateDoc(doc(db, 'wishList', wishList.id), {

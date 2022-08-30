@@ -8,18 +8,18 @@ import LoadingModal from '../../components/loading-modal/LoadingModal';
 import { db } from '../../config/firebase.config';
 import { firebaseDateFormat } from '../../helpers/common';
 import { useAppSelector } from '../../helpers/hooks';
-import AuthState from '../../models/auth';
 import { Order, OrderState } from '../../models/order';
 import { Bottom, Top } from '../../models/product';
-import { User } from '../../models/user';
+import { User, UserState } from '../../models/user';
 import '../../sass/common.scss';
-import { selectAuth } from '../../store/root-reducer';
+import { selectUser } from '../../store/user/user.reducer';
+import '../../sass/common.scss';
 import './order-detail.scss';
 
 const OrderDetail = () => {
     const { t } = useTranslation(['common', 'order', 'user', 'product']);
     const { orderId } = useParams();
-    const { currentUser, isAuthLoading } = useAppSelector<AuthState>(selectAuth);
+    const { user } = useAppSelector<UserState>(selectUser);
     const [orderData, setOrderData] = useState<Order>();
     const [userData, setUserData] = useState<User>();
     const [orderedProductsData, setOrderedProductsData] = useState<(Top | Bottom)[]>([]);
@@ -31,16 +31,16 @@ const OrderDetail = () => {
         try {
             const docRef = doc(db, 'order', orderId as string);
             const docSnap = await getDoc(docRef);
-            if (docSnap.exists() && currentUser) {
+            if (docSnap.exists() && user) {
                 const order = docSnap.data() as Order;
-                if (order.userId === currentUser.id) {
+                if (order.userId === user.id) {
                     setOrderData(order);
                     const fetch = async () => {
                         try {
                             const userDocSnap = await getDoc(doc(db, 'user', order.userId));
                             if (userDocSnap.exists()) {
-                                const user = userDocSnap.data() as User;
-                                setUserData(user);
+                                const userDataResult = userDocSnap.data() as User;
+                                setUserData(userDataResult);
                             }
                         } catch (error) {
                             if (error instanceof FirebaseError) toast.error(error.message);
@@ -70,7 +70,7 @@ const OrderDetail = () => {
                 setIsLoading(false);
             }
         }
-    }, [currentUser]);
+    }, [user]);
 
     const handleMarkShipped = async () => {
         setIsLoading(true);
@@ -308,11 +308,11 @@ const OrderDetail = () => {
                     </div>
                 </div>
             ) : (
-                <div className="order-detail text-center">
-                    <p>No data</p>
+                <div className="empty-content-container">
+                    <p className="text-center">No data</p>
                 </div>
             )}
-            {(isLoading || isAuthLoading) && <LoadingModal />}
+            {isLoading && <LoadingModal />}
         </>
     );
 };

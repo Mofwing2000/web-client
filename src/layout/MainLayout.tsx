@@ -3,18 +3,17 @@ import { Outlet } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import { useAppSelector } from '../helpers/hooks';
-import { selectAuth } from '../store/root-reducer';
-import SideBar from '../components/sidebar/SideBar';
 import './main-layout.scss';
-import AuthState from '../models/auth';
+import { UserState } from '../models/user';
+import { selectUser } from '../store/user/user.reducer';
 const MainLayout = () => {
-    const { currentUser, isAuthLoading } = useAppSelector<AuthState>(selectAuth);
+    const { user } = useAppSelector<UserState>(selectUser);
 
     return (
         <>
             <Header />
-            <main className="pt-0 pt-md-auto">
-                <Outlet context={currentUser} />
+            <main className="main">
+                <Outlet context={user} />
             </main>
             <Footer />
 
