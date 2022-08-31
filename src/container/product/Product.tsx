@@ -399,7 +399,11 @@ const Product = () => {
                                     </span>
                                 </div>
                                 <div className="product__main__info__buttons d-flex gap-3">
-                                    <button className="btn btn-lg btn-outline-danger" onClick={handleAddToCart}>
+                                    <button
+                                        className="btn btn-lg btn-outline-danger"
+                                        onClick={handleAddToCart}
+                                        disabled={productData.quantity <= 0}
+                                    >
                                         {t('common:addToCart')}
                                     </button>
                                     <button
@@ -410,6 +414,7 @@ const Product = () => {
                                                     navigate('/shopping-cart');
                                                 }, 500);
                                         }}
+                                        disabled={productData.quantity <= 0}
                                     >
                                         {t('common:buyNow')}
                                     </button>
