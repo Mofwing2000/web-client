@@ -56,9 +56,9 @@ const Header = () => {
             title: `${t('product:bottom')}`,
             url: '/bottom',
             subNav: [
-                { title: `${t('product:pants')}`, url: `/top/?category=${BottomCategory.PANTS}` },
-                { title: `${t('product:jeans')}`, url: `/top/?category=${BottomCategory.JEANS}` },
-                { title: `${t('product:shorts')}`, url: `/top/?category=${BottomCategory.SHORTS}` },
+                { title: `${t('product:pants')}`, url: `/bottom/?category=${BottomCategory.PANTS}` },
+                { title: `${t('product:jeans')}`, url: `/bottom/?category=${BottomCategory.JEANS}` },
+                { title: `${t('product:shorts')}`, url: `/bottom/?category=${BottomCategory.SHORTS}` },
             ],
         },
         { title: `${t('header:about')}`, url: '/about' },
