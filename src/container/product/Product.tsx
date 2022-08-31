@@ -106,10 +106,9 @@ const Product = () => {
             onSnapshot(
                 docRef,
                 (docSnap) => {
-                    if (docSnap.exists()) setCommentData(docSnap.data() as Comment);
-                    else {
-                        console.log('asdfasdf');
-
+                    if (docSnap.exists()) {
+                        setCommentData(docSnap.data() as Comment);
+                    } else {
                         const createDB = async () => {
                             try {
                                 await setDoc(docRef, {
@@ -228,30 +227,38 @@ const Product = () => {
         [productData],
     );
 
-    const sendComment = useCallback(
-        async (commentItem: CommentItem) => {
-            if (productData) {
-                const docRef = doc(db, 'comment', productData!.id);
-                try {
-                    await runTransaction(db, async (transaction) => {
-                        const sfDoc = await transaction.get(docRef);
-                        if (sfDoc.exists()) {
-                            const newComment = [...(sfDoc.data() as Comment).commentItemList, commentItem];
-                            transaction.update(docRef, { commentItemList: newComment });
-                        }
-                    });
-                } catch (error) {
-                    if (error instanceof FirebaseError) toast.error(error.message);
-                }
+    const sendComment = async (commentItem: CommentItem) => {
+        console.log(commentItem);
+        console.log(productData);
+
+        if (productData) {
+            const docRef = doc(db, 'comment', productData?.id);
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const sfDoc = await transaction.get(docRef);
+                    if (sfDoc.exists()) {
+                        console.log(commentItem);
+
+                        const newComment = [...(sfDoc.data() as Comment).commentItemList, commentItem];
+                        console.log(newComment);
+
+                        transaction.update(docRef, { commentItemList: newComment });
+                    }
+                });
+            } catch (error) {
+                if (error instanceof FirebaseError) toast.error(error.message);
             }
-        },
-        [productData],
-    );
+        } else {
+            console.log('asddfasfdas');
+        }
+    };
 
     const handleCommentDelete = useCallback(
         async (id: string) => {
             setIsLoading(true);
             if (productData) {
+                console.log('asdffadsadfsfdas12312312');
+
                 const docRef = doc(db, 'comment', productData!.id);
                 try {
                     await runTransaction(db, async (transaction) => {
@@ -275,22 +282,31 @@ const Product = () => {
         [productData],
     );
 
-    const onSubmit: SubmitHandler<CommentForm> = useCallback(async (data) => {
-        setIsLoading(true);
-        const commentItem: CommentItem = {
-            id: cuid(),
-            userId: user!.id,
-            userName: user!.firstName + ' ' + user!.lastName,
-            avatar: user!.photoUrl,
-            content: data.content,
-            createdAt: new Date(Date.now()),
-        };
-        await sendComment(commentItem);
-        setIsLoading(false);
-        reset({
-            content: '',
-        });
-    }, []);
+    const onSubmit: SubmitHandler<CommentForm> = useCallback(
+        async (data) => {
+            if (productData) {
+                setIsLoading(true);
+                console.log(productData);
+
+                const commentItem: CommentItem = {
+                    id: cuid(),
+                    userId: user!.id,
+                    userName: user!.firstName + ' ' + user!.lastName,
+                    avatar: user!.photoUrl,
+                    content: data.content,
+                    createdAt: new Date(Date.now()),
+                };
+                console.log(commentItem);
+
+                await sendComment(commentItem);
+                setIsLoading(false);
+                reset({
+                    content: '',
+                });
+            }
+        },
+        [commentData],
+    );
 
     useEffect(() => {
         const fetch = async () => {
