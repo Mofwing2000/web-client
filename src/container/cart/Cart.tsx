@@ -51,8 +51,12 @@ const CartPage = () => {
         }
     }, [cartProducts]);
 
-    const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>, cartItem: CartItem, oldQuantity: number) => {
-        if (cartProducts) {
+    const handleQuantityChange = async (
+        e: React.ChangeEvent<HTMLInputElement>,
+        cartItem: CartItem,
+        oldQuantity: number,
+    ) => {
+        if (cartProducts && !isLoading) {
             let newQuantity: number;
             const itemInProductList = cartProducts.find((product) => product.id === cartItem.id);
             if (+e.target.value < 1) {
@@ -60,8 +64,7 @@ const CartPage = () => {
                 e.target.value = '1';
             } else if (
                 itemInProductList &&
-                itemInProductList &&
-                +e.target.value > itemInProductList.quantity - cartItemQuantity[cartItem.id]
+                +e.target.value > itemInProductList.quantity - cartItemQuantity[cartItem.id] + +oldQuantity
             ) {
                 newQuantity = itemInProductList.quantity - cartItemQuantity[cartItem.id] + oldQuantity;
                 e.target.value = newQuantity + '';
