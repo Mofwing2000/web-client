@@ -101,7 +101,6 @@ const Product = () => {
 
     const unsub = useCallback(() => {
         if (productData) {
-            console.log('unsub');
             const docRef = doc(db, 'comment', productData.id);
             onSnapshot(
                 docRef,
@@ -228,28 +227,19 @@ const Product = () => {
     );
 
     const sendComment = async (commentItem: CommentItem) => {
-        console.log(commentItem);
-        console.log(productData);
-
         if (productData) {
             const docRef = doc(db, 'comment', productData?.id);
             try {
                 await runTransaction(db, async (transaction) => {
                     const sfDoc = await transaction.get(docRef);
                     if (sfDoc.exists()) {
-                        console.log(commentItem);
-
-                        const newComment = [...(sfDoc.data() as Comment).commentItemList, commentItem];
-                        console.log(newComment);
-
+                        const newComment = [commentItem, ...(sfDoc.data() as Comment).commentItemList];
                         transaction.update(docRef, { commentItemList: newComment });
                     }
                 });
             } catch (error) {
                 if (error instanceof FirebaseError) toast.error(error.message);
             }
-        } else {
-            console.log('asddfasfdas');
         }
     };
 
