@@ -175,6 +175,12 @@ const Catalog = () => {
         }
     }, [wishList, currentFilteredProducts]);
 
+    useEffect(() => {
+        if (typeof queryString.parse(location.search).category === 'string') {
+            setCategory(queryString.parse(location.search).category as TopCategory | BottomCategory);
+        }
+    }, [location.search]);
+
     // console.log(currentFilteredProducts);
     const searchParams = useMemo(() => {
         const filter: {
@@ -187,6 +193,7 @@ const Catalog = () => {
         if (size.length) filter.size = [...size];
         return queryString.stringify(filter, { arrayFormat: 'comma', skipNull: true });
     }, [category, color, size]);
+    console.log(searchParams);
 
     useEffect(() => {
         const endOffset = itemOffset + pageSize;
