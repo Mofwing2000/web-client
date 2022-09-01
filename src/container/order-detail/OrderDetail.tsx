@@ -1,6 +1,6 @@
 import { FirebaseError } from '@firebase/util';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { doc, getDoc, runTransaction, updateDoc } from 'firebase/firestore';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -15,6 +15,7 @@ import '../../sass/common.scss';
 import { selectUser } from '../../store/user/user.reducer';
 import '../../sass/common.scss';
 import './order-detail.scss';
+import { promises } from 'stream';
 
 const OrderDetail = () => {
     const { t } = useTranslation(['common', 'order', 'user', 'product']);
@@ -25,6 +26,34 @@ const OrderDetail = () => {
     const [orderedProductsData, setOrderedProductsData] = useState<(Top | Bottom)[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>();
     const trackingFormRef = useRef<HTMLDivElement>(null);
+
+    const updateQuantity = async (id: string, tempLimit: any) => {
+        const docRef = doc(db, 'product', id);
+        try {
+            await runTransaction(db, async (transaction) => {
+                const sfDoc = await transaction.get(docRef);
+                if (sfDoc.exists()) {
+                    const newQuantity = sfDoc.data().quantity + tempLimit[id];
+                    transaction.update(docRef, { quantity: newQuantity });
+                }
+            });
+        } catch (error) {
+            if (error instanceof FirebaseError) toast.error(error.message);
+        }
+    };
+
+    const returnQuantity = useCallback(async () => {
+        let tempLimit: any = {};
+        if (orderData) {
+            if (orderData.orderedProducts) {
+                orderData.orderedProducts.forEach((item) => {
+                    if (typeof tempLimit[item.id] === 'undefined') tempLimit[item.id] = item.quantity;
+                    else tempLimit[item.id] += item.quantity;
+                });
+            }
+            await Promise.all(Object.keys(tempLimit).map((item) => updateQuantity(item, tempLimit)));
+        }
+    }, [orderData]);
 
     const fetchData = useCallback(async () => {
         setIsLoading(true);
@@ -95,6 +124,7 @@ const OrderDetail = () => {
                 orderState: OrderState.CANCELED,
             });
             await fetchData();
+            await returnQuantity();
             setIsLoading(false);
         } catch (error) {
             if (error instanceof FirebaseError) toast.error(error.message);
