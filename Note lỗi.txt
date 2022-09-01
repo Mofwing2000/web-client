@@ -1,0 +1,12 @@
+Client:
++ comment không gửi dược data & comment mới hiển thi ở cuối: Chưa check đk productData => không gửi được data ( đã fix)
++ Submenu phần bottom sai url (đã fix)
++ Nút Buy now và Add to cart chưa disable khi out of stock (đã fix)
++ Category ở filter sidebar và url không sync => dữ liệu render khong đúng(đã fix)
++ Limit ở trang cart bị sai (đã fix)
++ Hủy đơn không hoàn lại số lượng(đã fix) 
++ Validate số lượng khi add to cart
+Admin:
++ Hủy đơn không hoàn lại số lượng(đã fix) 
++ Thiếu quản lý collection (mới chỉ có add)
++ Thiếu thanh search ở trang quản lý sp
