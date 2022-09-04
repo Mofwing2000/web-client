@@ -14,5 +14,8 @@ export const firebaseDateFormat = (value: Date) => {
 };
 
 export const firebaseRelativeDateFormat = (value: Date) => {
+    const langVal = i18n.language;
+    if (langVal === 'vn') moment.locale('vi');
+    if (langVal === 'en') moment.locale('en');
     return moment((value as unknown as Timestamp).toDate()).fromNow();
 };
