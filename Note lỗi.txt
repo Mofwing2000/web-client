@@ -5,7 +5,7 @@ Client:
 + Category ở filter sidebar và url không sync => dữ liệu render khong đúng(đã fix)
 + Limit ở trang cart bị sai (đã fix)
 + Hủy đơn không hoàn lại số lượng(đã fix) 
-+ Validate số lượng khi add to cart
++ Validate số lượng khi add to cart(ddax fix)
 Admin:
 + Hủy đơn không hoàn lại số lượng(đã fix) 
 + Thiếu quản lý collection (mới chỉ có add)
