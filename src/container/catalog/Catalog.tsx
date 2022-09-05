@@ -90,7 +90,6 @@ const Catalog = () => {
             return checkCategory(item) && checkColor(item) && checkSize(item);
         });
     }, [products, category, size, color]);
-    console.log(filteredProducts);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -179,6 +178,12 @@ const Catalog = () => {
         if (typeof queryString.parse(location.search).category === 'string') {
             setCategory(queryString.parse(location.search).category as TopCategory | BottomCategory);
         }
+        if (typeof queryString.parse(location.search).size === 'string')
+            setSize((queryString.parse(location.search).size as string).split(',') as Size[]);
+        else setSize([]);
+        if (typeof queryString.parse(location.search).color === 'string')
+            setColor((queryString.parse(location.search).color as string).split(',') as Color[]);
+        else setColor([]);
     }, [location.search]);
 
     // console.log(currentFilteredProducts);
