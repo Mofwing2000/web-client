@@ -3,6 +3,7 @@ import { call, put, select, takeEvery } from '@redux-saga/core/effects';
 import { DocumentData, getDoc, getDocs, DocumentReference, doc, updateDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { db } from '../../config/firebase.config';
+import i18n from '../../i18n';
 import { User } from '../../models/user';
 import { WishList } from '../../models/wish-list';
 import { selectCart } from '../cart/cart.reducer';
@@ -39,13 +40,15 @@ async function toggleWishList(id: string, wishList: WishList) {
         await updateDoc(doc(db, 'wishList', wishList.id), {
             productIdList: [...newProductsList],
         });
-        toast.success('Removed from wishList');
+        if (i18n.language === 'en') toast.success('Removed from wishList');
+        else if (i18n.language === 'vn') toast.success('Đã gỡ khỏi danh sách yêu thích');
     } else {
         newProductsList = [...wishList.productIdList, id];
         await updateDoc(doc(db, 'wishList', wishList.id), {
             productIdList: [...newProductsList],
         });
-        toast.success('Added from wishList');
+        if (i18n.language === 'en') toast.success('Added from wishList');
+        else if (i18n.language === 'vn') toast.success('Đã thêm vào danh sách yêu thích');
     }
     return {
         ...wishList,
