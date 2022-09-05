@@ -10,8 +10,8 @@ import SwiperCore, { Autoplay } from 'swiper';
 import { FirebaseError } from '@firebase/util';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { CartItem } from '../../models/cart';
-import { addCartAsync } from '../../store/cart/cart.action';
+import { CartItem, CartState } from '../../models/cart';
+import { addCartAsync, fetchCartAsync } from '../../store/cart/cart.action';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import * as yup from 'yup';
 import { DEFAULT_USER_PHOTO_URL as defaultPhotoImg } from '../../constants/commons';
@@ -27,6 +27,7 @@ import cuid from 'cuid';
 import { firebaseRelativeDateFormat } from '../../helpers/common';
 import { UserState } from '../../models/user';
 import { selectUser } from '../../store/user/user.reducer';
+import { selectCart } from '../../store/cart/cart.reducer';
 
 interface CommentForm {
     content: string;
@@ -53,6 +54,7 @@ const Product = () => {
     const [selectQuantity, setSelectQuantity] = useState<number>(1);
     const [commentData, setCommentData] = useState<Comment>();
     const [currentIndex, setCurrentIndex] = useState<number>(5);
+    const { cart, isCartLoading } = useAppSelector<CartState>(selectCart);
 
     const {
         register,
@@ -74,6 +76,15 @@ const Product = () => {
         setSelectedSize(size);
     }, []);
 
+    const quantityIncart = useMemo(() => {
+        if (cart && productData) {
+            return cart.cartItems.reduce((total, current) => {
+                if (current.id === productData.id) return total + current.quantity;
+                else return total;
+            }, 0);
+        }
+    }, [cart, productData]);
+
     const handleAddToCart = useCallback(() => {
         if (!user) {
             navigate('/login');
@@ -86,7 +97,11 @@ const Product = () => {
             toast.warning(`${t('common:selectOneSize')}`);
             return 0;
         } else {
-            if (productData) {
+            if (productData && quantityIncart !== undefined) {
+                if (selectQuantity > productData.quantity - quantityIncart) {
+                    toast.error(t('common:limitQuantityReached'));
+                    return 0;
+                }
                 const cartItem: CartItem = {
                     id: productData.id,
                     quantity: selectQuantity,
@@ -210,20 +225,24 @@ const Product = () => {
     }, [selectQuantity, productData]);
 
     const handleIncreaseQuantity = useCallback(() => {
-        if (productData) {
-            if (selectQuantity < productData.quantity) setSelectQuantity(selectQuantity + 1);
+        if (productData && quantityIncart !== undefined) {
+            if (selectQuantity > productData.quantity - quantityIncart) toast.error(t('common:limitQuantityReached'));
+            else setSelectQuantity(selectQuantity + 1);
         }
-    }, [selectQuantity, productData]);
+    }, [selectQuantity, productData, quantityIncart]);
 
     const handleQuantityChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (productData) {
-                if (+e.target.value > productData.quantity) setSelectQuantity(productData.quantity);
-                else if (+e.target.value < 1) setSelectQuantity(1);
+            if (productData && quantityIncart !== undefined) {
+                if (+e.target.value > productData.quantity - quantityIncart) {
+                    if (productData.quantity - quantityIncart > 0)
+                        setSelectQuantity(productData.quantity - quantityIncart);
+                    else setSelectQuantity(1);
+                } else if (+e.target.value < 1) setSelectQuantity(1);
                 else setSelectQuantity(+e.target.value);
             }
         },
-        [productData],
+        [productData, quantityIncart],
     );
 
     const sendComment = async (commentItem: CommentItem) => {
@@ -319,6 +338,10 @@ const Product = () => {
             unsub();
         }
     }, [productData]);
+
+    useEffect(() => {
+        dispatch(fetchCartAsync.request());
+    }, []);
 
     return (
         <>
