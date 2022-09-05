@@ -189,13 +189,13 @@ const CartPage = () => {
                                     <tbody>{listCartItems}</tbody>
                                 </table>
                             </div>
-                            <div className="row">
-                                <div className="col-lg-6 col-md-6 col-sm-6 ps-3">
+                            <div className="row gy-3">
+                                <div className="col-md-6 px-3">
                                     <div className="cart__btn">
                                         <Link to="/top">{t('order:continueShoping')}</Link>
                                     </div>
                                 </div>
-                                <div className="col-lg-6 col-md-6 col-sm-6 text-end pe-3">
+                                <div className="col-md-6 text-md-end px-3">
                                     <div className="cart__btn">
                                         <Link to="/checkout"> {t('order:checkout')}</Link>
                                     </div>
