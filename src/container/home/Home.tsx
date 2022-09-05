@@ -65,10 +65,7 @@ const Home = () => {
         [products, wishList],
     );
 
-    const heroComponent = useMemo(
-        () => collections && <Hero collectionsData={collections} isCollectionLoading={isCollectionLoading} />,
-        [collections],
-    );
+    const heroComponent = useMemo(() => collections && <Hero collectionsData={collections} />, [collections]);
     return (
         <>
             <div>

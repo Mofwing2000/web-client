@@ -13,11 +13,10 @@ import { Link, useNavigate } from 'react-router-dom';
 
 interface IProps {
     collectionsData: Collection[];
-    isCollectionLoading: boolean;
 }
 
 const Hero: FC<IProps> = (props) => {
-    const { collectionsData, isCollectionLoading } = props;
+    const { collectionsData } = props;
     const { t } = useTranslation(['common']);
     SwiperCore.use([Navigation, Autoplay, EffectFade]);
 
@@ -69,7 +68,7 @@ const Hero: FC<IProps> = (props) => {
                     ))
                 ) : (
                     <div>
-                        {isCollectionLoading ? (
+                        {collectionsData ? (
                             <div className="empty-content-container"></div>
                         ) : (
                             <div className="h-100">
