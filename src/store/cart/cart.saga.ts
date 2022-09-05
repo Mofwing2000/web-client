@@ -20,8 +20,6 @@ import {
 } from './cart.action';
 import { selectCart } from './cart.reducer';
 
-const currentLanguage = i18n.language;
-
 async function fetchCart(id: string) {
     const querySnapShot = await getDoc(doc(db, 'cart', id));
     if (querySnapShot.exists()) return querySnapShot.data() as Cart;
@@ -62,13 +60,13 @@ function* addCartGen(action: ReturnType<typeof addCartAsync.request>) {
                     (item) => item.id === cartItem.id && item.color === cartItem.color && item.size === cartItem.size,
                 ) !== -1
             ) {
-                if (currentLanguage === 'en') toast.warning('Product in cart already');
-                else if (currentLanguage === 'vn') toast.warning('Sản phẩm đã có trong giỏ hàng');
+                if (i18n.language === 'en') toast.warning('Product in cart already');
+                else if (i18n.language === 'vn') toast.warning('Sản phẩm đã có trong giỏ hàng');
                 yield put(addCartAsync.success(cart));
             } else {
                 const cartData: Cart = yield call(addCart, cartItem, cart);
-                if (currentLanguage === 'en') toast.success('Added to cart');
-                else if (currentLanguage === 'vn') toast.success('Đã thêm vào giỏ hàng');
+                if (i18n.language === 'en') toast.success('Added to cart');
+                else if (i18n.language === 'vn') toast.success('Đã thêm vào giỏ hàng');
                 yield put(addCartAsync.success(cartData));
             }
         }
@@ -98,8 +96,8 @@ function* removeCartGen(action: ReturnType<typeof removeCartAsync.request>) {
         const { cart }: ReturnType<typeof selectCart> = yield select(selectCart);
         if (cart) {
             const cartData: Cart = yield call(removeCart, cartItem, cart);
-            if (currentLanguage === 'en') toast.warning('Product removed from cart');
-            else if (currentLanguage === 'vn') toast.warning('Sản phẩm đã được xóa khỏi giỏ hàng');
+            if (i18n.language === 'en') toast.warning('Product removed from cart');
+            else if (i18n.language === 'vn') toast.warning('Sản phẩm đã được xóa khỏi giỏ hàng');
             yield put(removeCartAsync.success(cartData));
         }
     } catch (error) {
