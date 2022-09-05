@@ -1,7 +1,8 @@
 import { collection, query } from 'firebase/firestore';
 import React, { memo, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
 import { db } from '../../config/firebase.config';
 import { DEFAULT_PRODUCT_PHOTO_URL as defaultProductPhoto } from '../../constants/commons';
@@ -26,6 +27,7 @@ const CartPage = () => {
     const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
     const { user } = useAppSelector<UserState>(selectUser);
     const { t } = useTranslation(['common', 'order']);
+    const navigate = useNavigate();
     // const [cartProducts , setCartProducts]  = useState<(Top|Bottom)[]>()
     const dispatch = useAppDispatch();
     const isLoading = useMemo(() => {
@@ -133,6 +135,7 @@ const CartPage = () => {
                                                         cartItem.quantity - cartItemQuantity[item.id] + item.quantity
                                                 )
                                                     dispatch(increaseCartAsync.request(item));
+                                                else toast.error(t('common:limitQuantityReached'));
                                             }}
                                         ></span>
                                     </div>
@@ -197,7 +200,24 @@ const CartPage = () => {
                                 </div>
                                 <div className="col-md-6 text-md-end px-3">
                                     <div className="cart__btn">
-                                        <Link to="/checkout"> {t('order:checkout')}</Link>
+                                        <button
+                                            onClick={() => {
+                                                if (cartProducts) {
+                                                    if (
+                                                        cartProducts.findIndex(
+                                                            (item) => item.quantity < cartItemQuantity[item.id],
+                                                        ) !== -1
+                                                    ) {
+                                                        toast.error(t('common:limitQuantityReached'));
+                                                    } else {
+                                                        navigate('/checkout');
+                                                    }
+                                                }
+                                            }}
+                                        >
+                                            {' '}
+                                            {t('order:checkout')}
+                                        </button>
                                     </div>
                                 </div>
                             </div>

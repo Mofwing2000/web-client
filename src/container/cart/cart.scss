@@ -114,7 +114,8 @@
 }
 
 .cart__btn {
-    a {
+    a,
+    button {
         font-size: 14px;
         font-weight: 700;
         letter-spacing: 2px;
@@ -122,6 +123,8 @@
         border: 1px solid #e1e1e1;
         padding: 14px 35px;
         display: inline-block;
+        color: inherit;
+        background-color: inherit;
     }
 }
 
