@@ -2,7 +2,7 @@ import { collection, orderBy, query } from 'firebase/firestore';
 import queryString from 'query-string';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
 import Pagination from '../../components/pagination/Pagination';
 import ProductFilterBar from '../../components/product-filter-bar/ProductFilterBar';

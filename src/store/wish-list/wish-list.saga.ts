@@ -1,13 +1,11 @@
 import { FirebaseError } from '@firebase/util';
 import { call, put, select, takeEvery } from '@redux-saga/core/effects';
-import { DocumentData, getDoc, getDocs, DocumentReference, doc, updateDoc } from 'firebase/firestore';
+import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { db } from '../../config/firebase.config';
 import i18n from '../../i18n';
-import { User } from '../../models/user';
+
 import { WishList } from '../../models/wish-list';
-import { selectCart } from '../cart/cart.reducer';
-import { selectAuth } from '../root-reducer';
 import { selectUser } from '../user/user.reducer';
 import { fetchWishListAsync, toggleWishListAsync } from './wish-list.action';
 import { selectWishList } from './wish-list.reducer';
@@ -33,7 +31,6 @@ function* fetchWishListGen() {
 }
 
 async function toggleWishList(id: string, wishList: WishList) {
-    const productsList = wishList.productIdList;
     let newProductsList: string[];
     if (wishList.productIdList.includes(id)) {
         newProductsList = wishList.productIdList.filter((product) => product !== id);

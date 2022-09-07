@@ -1,15 +1,14 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo } from 'react';
 import Hero from '../../components/hero/Hero';
-import { collection, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { collection, limit, orderBy, query } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
 import { db } from '../../config/firebase.config';
-import { Collection, CollectionState } from '../../models/collection';
-import { Link, useNavigate } from 'react-router-dom';
+import { CollectionState } from '../../models/collection';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
 import ProductItem from '../../components/product-item/ProductItem';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import { selectCollection } from '../../store/collection/collection.reducer';
-import { clearCollection, fetchColllectionsAsync } from '../../store/collection/collection.action';
+import { fetchColllectionsAsync } from '../../store/collection/collection.action';
 import { ProductState } from '../../models/product';
 import { selectProduct } from '../../store/product/product.reducer';
 import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
@@ -18,6 +17,7 @@ import { selectWishList } from '../../store/wish-list/wish-list.reducer';
 import { fetchWishListAsync, toggleWishListAsync } from '../../store/wish-list/wish-list.action';
 import { selectUser } from '../../store/user/user.reducer';
 import { UserState } from '../../models/user';
+
 const Home = () => {
     const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
     const { wishList, isWishListLoading } = useAppSelector<WishListState>(selectWishList);
@@ -36,20 +36,6 @@ const Home = () => {
         dispatch(toggleWishListAsync.request(productId));
     }, []);
 
-    useEffect(() => {
-        dispatch(fetchColllectionsAsync.request(fetchQuery));
-    }, []);
-
-    useEffect(() => {
-        dispatch(fetchProductsAsync.request(productFetchQuery));
-        return () => {
-            dispatch(clearProducts());
-        };
-    }, []);
-
-    useEffect(() => {
-        if (user && !wishList) dispatch(fetchWishListAsync.request());
-    }, []);
     const latestProductRender = useMemo(
         () =>
             products.length > 0 &&
@@ -64,6 +50,21 @@ const Home = () => {
             )),
         [products, wishList],
     );
+
+    useEffect(() => {
+        dispatch(fetchColllectionsAsync.request(fetchQuery));
+    }, []);
+
+    useEffect(() => {
+        dispatch(fetchProductsAsync.request(productFetchQuery));
+        return () => {
+            dispatch(clearProducts());
+        };
+    }, []);
+
+    useEffect(() => {
+        if (user && !wishList) dispatch(fetchWishListAsync.request());
+    }, []);
 
     const heroComponent = useMemo(() => collections && <Hero collectionsData={collections} />, [collections]);
     return (

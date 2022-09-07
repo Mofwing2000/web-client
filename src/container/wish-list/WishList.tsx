@@ -12,7 +12,9 @@ import { clearProducts, fetchProductsAsync } from '../../store/product/product.a
 import { selectProduct } from '../../store/product/product.reducer';
 import { fetchWishListAsync, toggleWishListAsync } from '../../store/wish-list/wish-list.action';
 import { selectWishList } from '../../store/wish-list/wish-list.reducer';
+
 import './wish-list.scss';
+
 const WishListPage = () => {
     const { t } = useTranslation(['common', 'product']);
     const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);

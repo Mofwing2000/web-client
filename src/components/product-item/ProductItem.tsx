@@ -1,9 +1,10 @@
 import React, { FC, memo, useMemo } from 'react';
 import { Product } from '../../models/product';
-import './product-item.scss';
-import { DEFAULT_PRODUCT_PHOTO_URL as defaultPhotoImg } from '../../constants/commons';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+
+import { DEFAULT_PRODUCT_PHOTO_URL as defaultPhotoImg } from '../../constants/commons';
+import './product-item.scss';
+
 interface IProps {
     product: Product;
     onToggleWishList: React.MouseEventHandler<HTMLElement>;
@@ -12,6 +13,7 @@ interface IProps {
 
 const ProductCard: FC<IProps> = (props) => {
     const { product, onToggleWishList, isLiked } = props;
+
     const colorsBar = useMemo(
         () =>
             product && (
@@ -31,6 +33,7 @@ const ProductCard: FC<IProps> = (props) => {
             ),
         [product],
     );
+
     return (
         <div className="product-item mb-5 position-relative">
             <div className="product-item__pic">

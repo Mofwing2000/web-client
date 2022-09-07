@@ -1,6 +1,4 @@
 import { createReducer, Reducer } from 'typesafe-actions';
-import AuthState from '../../models/auth';
-import { ActionType } from 'typesafe-actions';
 import { WishList, WishListState } from '../../models/wish-list';
 import { WishListActionType } from '../../type/wish-list-actions';
 import { AnyAction, PayloadAction } from '@reduxjs/toolkit';

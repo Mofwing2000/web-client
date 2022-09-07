@@ -1,4 +1,3 @@
-import { User } from 'firebase/auth';
 import { createAction, createAsyncAction } from 'typesafe-actions';
 import { LoginInput, SignupInput } from '../../models/form';
 import { AuthActionsType } from '../../type/auth';

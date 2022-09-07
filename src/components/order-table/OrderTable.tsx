@@ -1,10 +1,11 @@
 import React, { memo, useState } from 'react';
 import { Order, OrderState } from '../../models/order';
-import '../../sass/common.scss';
 import ReactTooltip from 'react-tooltip';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { firebaseDateFormat } from '../../helpers/common';
+
+import '../../sass/common.scss';
 
 interface Iprops {
     ordersData: Order[];

@@ -4,16 +4,18 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
-import OrderTable from '../../components/order-table/OrderTable';
 import OrderFilterBar from '../../components/order-filter-bar/OrderFilterBar';
+import OrderTable from '../../components/order-table/OrderTable';
 import Pagination from '../../components/pagination/Pagination';
 import { db } from '../../config/firebase.config';
 import { useAppSelector } from '../../helpers/hooks';
 import { Order } from '../../models/order';
-import { PageLimit, PageOrder, PageOrderSort } from '../../type/page-type';
 import { UserState } from '../../models/user';
 import { selectUser } from '../../store/user/user.reducer';
+import { PageLimit, PageOrder, PageOrderSort } from '../../type/page-type';
+
 import '../../sass/common.scss';
+
 const OrderPage = () => {
     const { user } = useAppSelector<UserState>(selectUser);
     const [ordersData, setOrdersData] = useState<Order[]>();

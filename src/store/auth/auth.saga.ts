@@ -5,7 +5,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { push } from 'redux-first-history';
 import auth, { db } from '../../config/firebase.config';
-import { loginAsync, logout, signupAsync } from './auth.action';
+import { loginAsync, signupAsync } from './auth.action';
 import { DEFAULT_USER_PHOTO_URL as defaultAvatar } from '../../constants/commons';
 import { User } from '../../models/user';
 import { WishList } from '../../models/wish-list';
@@ -67,7 +67,6 @@ async function signupFirebase(
     phoneNumber: string,
     address: string,
 ) {
-    console.log(email, password, firstName, lastName, phoneNumber, address);
     return createUserWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
         const docRef = doc(db, 'user', userCredential.user.uid);
         await setDoc(docRef, {
@@ -89,7 +88,7 @@ async function signupFirebase(
 
 function* signup(action: ReturnType<typeof signupAsync.request>) {
     try {
-        const { email, password, firstName, lastName, confirmPassword, phoneNumber, address } = action.payload;
+        const { email, password, firstName, lastName, phoneNumber, address } = action.payload;
         yield call(signupFirebase, email, password, firstName, lastName, phoneNumber, address);
         yield put(push('/login'));
     } catch (error) {

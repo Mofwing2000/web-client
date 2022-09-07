@@ -2,7 +2,7 @@ import { collection, orderBy, query, where } from 'firebase/firestore';
 import queryString from 'query-string';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
 import Pagination from '../../components/pagination/Pagination';
 import ProductFilterBar from '../../components/product-filter-bar/ProductFilterBar';
@@ -11,18 +11,21 @@ import { db } from '../../config/firebase.config';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import { Bottom, BottomCategory, Color, ProductState, ProductType, Size, Top, TopCategory } from '../../models/product';
 import { UserState } from '../../models/user';
-import { WishList, WishListState } from '../../models/wish-list';
+import { WishListState } from '../../models/wish-list';
 import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
 import { selectProduct } from '../../store/product/product.reducer';
 import { selectUser } from '../../store/user/user.reducer';
 import { fetchWishListAsync, toggleWishListAsync } from '../../store/wish-list/wish-list.action';
 import { selectWishList } from '../../store/wish-list/wish-list.reducer';
 import { PageLimit, PageOrder, PageProductSort } from '../../type/page-type';
+
 import './catalog.scss';
 
 const Catalog = () => {
     const { type } = useParams();
     const { t } = useTranslation(['common', 'product']);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
     const { user } = useAppSelector<UserState>(selectUser);
     const { wishList, isWishListLoading } = useAppSelector<WishListState>(selectWishList);
@@ -38,62 +41,71 @@ const Catalog = () => {
             return queryString.parse(location.search).category as TopCategory | BottomCategory;
         } else return null;
     });
+
     const [size, setSize] = useState<Size[]>(() => {
         if (typeof queryString.parse(location.search).size === 'string')
             return (queryString.parse(location.search).size as string).split(',') as Size[];
         else return [];
     });
+
     const [color, setColor] = useState<Color[]>(() => {
         if (typeof queryString.parse(location.search).color === 'string')
             return (queryString.parse(location.search).color as string).split(',') as Color[];
         else return [];
     });
 
-    const checkCategory = (item: Top | Bottom) => {
-        if (category) {
-            if (type === ProductType.TOP) {
-                return (
-                    (item as Top).category.findIndex(
-                        (categoryItem) => categoryItem.categoryName === category && categoryItem.isCategory === true,
-                    ) !== -1
-                );
-            } else if (type === ProductType.BOTTOM) {
-                return (
-                    (item as Bottom).category.findIndex(
-                        (categoryItem) => categoryItem.categoryName === category && categoryItem.isCategory === true,
-                    ) !== -1
-                );
+    const checkCategory = useCallback(
+        (item: Top | Bottom) => {
+            if (category) {
+                if (type === ProductType.TOP) {
+                    return (
+                        (item as Top).category.findIndex(
+                            (categoryItem) =>
+                                categoryItem.categoryName === category && categoryItem.isCategory === true,
+                        ) !== -1
+                    );
+                } else if (type === ProductType.BOTTOM) {
+                    return (
+                        (item as Bottom).category.findIndex(
+                            (categoryItem) =>
+                                categoryItem.categoryName === category && categoryItem.isCategory === true,
+                        ) !== -1
+                    );
+                } else return true;
             } else return true;
-        } else return true;
-    };
+        },
+        [category],
+    );
 
-    const checkColor = (item: Top | Bottom) => {
-        if (color.length) {
-            return item.color.some(
-                (colorItem) => color.includes(colorItem.colorName) && colorItem.isAvailable === true,
-            );
-        } else {
-            return true;
-        }
-    };
+    const checkColor = useCallback(
+        (item: Top | Bottom) => {
+            if (color.length) {
+                return item.color.some(
+                    (colorItem) => color.includes(colorItem.colorName) && colorItem.isAvailable === true,
+                );
+            } else {
+                return true;
+            }
+        },
+        [color],
+    );
 
-    const checkSize = (item: Top | Bottom) => {
-        if (size.length) {
-            return item.size.some((sizeItem) => size.includes(sizeItem.sizeName) && sizeItem.isAvailable === true);
-        } else {
-            return true;
-        }
-    };
+    const checkSize = useCallback(
+        (item: Top | Bottom) => {
+            if (size.length) {
+                return item.size.some((sizeItem) => size.includes(sizeItem.sizeName) && sizeItem.isAvailable === true);
+            } else {
+                return true;
+            }
+        },
+        [size],
+    );
 
     const filteredProducts = useMemo(() => {
         return products.filter((item) => {
             return checkCategory(item) && checkColor(item) && checkSize(item);
         });
     }, [products, category, size, color]);
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-
-    // console.log(queryString.parse(location.search).category as string);
 
     const topCategories = [
         TopCategory.TOP,
@@ -186,7 +198,6 @@ const Catalog = () => {
         else setColor([]);
     }, [location.search]);
 
-    // console.log(currentFilteredProducts);
     const searchParams = useMemo(() => {
         const filter: {
             category: TopCategory | BottomCategory | null;
@@ -198,7 +209,6 @@ const Catalog = () => {
         if (size.length) filter.size = [...size];
         return queryString.stringify(filter, { arrayFormat: 'comma', skipNull: true });
     }, [category, color, size]);
-    console.log(searchParams);
 
     useEffect(() => {
         const endOffset = itemOffset + pageSize;
@@ -392,10 +402,3 @@ const Catalog = () => {
 };
 
 export default memo(Catalog);
-
-// color =red ,size = xl,m, category ='pant'
-// .filter(item => {
-//     return category === 'pant' && item.color.every(color Color.colorname)
-// })
-
-// item [color{name, is}] [size,[name ,is]]

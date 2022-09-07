@@ -1,6 +1,4 @@
 import { createReducer, Reducer } from 'typesafe-actions';
-import AuthState from '../../models/auth';
-import { ActionType } from 'typesafe-actions';
 import { Cart, CartState } from '../../models/cart';
 import { CartActionType } from '../../type/cart-actions';
 import { AnyAction, PayloadAction } from '@reduxjs/toolkit';

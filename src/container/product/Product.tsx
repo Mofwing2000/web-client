@@ -35,7 +35,10 @@ interface CommentForm {
 }
 
 const Product = () => {
+    SwiperCore.use([Autoplay, Navigation, Thumbs]);
     const { t } = useTranslation(['common', 'product']);
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const schema = yup
         .object({
             content: yup
@@ -45,7 +48,6 @@ const Product = () => {
                 .required(`${t('common:requiredMessage')}`),
         })
         .required();
-    SwiperCore.use([Autoplay, Navigation, Thumbs]);
     const { productId } = useParams();
     const { user } = useAppSelector<UserState>(selectUser);
     const [productData, setProductData] = useState<Top | Bottom>();
@@ -68,8 +70,6 @@ const Product = () => {
         resolver: yupResolver(schema),
         defaultValues: { content: '' },
     });
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch();
 
     const handleColorSelect = useCallback((color: Color) => {
         setSelectedColor(color);

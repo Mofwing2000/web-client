@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,9 +15,6 @@ const Signup = () => {
     const navigate = useNavigate();
     const { userToken } = useAppSelector<AuthState>(selectAuth);
 
-    useEffect(() => {
-        if (userToken) navigate('/');
-    }, [userToken]);
     const schema = yup
         .object({
             email: yup
@@ -85,54 +82,72 @@ const Signup = () => {
         address: '',
     });
 
-    const handleEmailOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormValues({
-            ...formValues,
-            email: e.target.value,
+    const handleEmailOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormValues((prev) => {
+            return {
+                ...prev,
+                email: e.target.value,
+            };
         });
-    };
+    }, []);
 
-    const handlePasswordOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormValues({
-            ...formValues,
-            password: e.target.value,
+    const handlePasswordOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormValues((prev) => {
+            return {
+                ...prev,
+                password: e.target.value,
+            };
         });
-    };
+    }, []);
 
-    const handleConfirmPasswordOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormValues({
-            ...formValues,
-            confirmPassword: e.target.value,
+    const handleConfirmPasswordOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormValues((prev) => {
+            return {
+                ...prev,
+                confirmPassword: e.target.value,
+            };
         });
-    };
+    }, []);
 
-    const handleFirstNameOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormValues({
-            ...formValues,
-            firstName: e.target.value,
+    const handleFirstNameOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormValues((prev) => {
+            return {
+                ...prev,
+                firstName: e.target.value,
+            };
         });
-    };
+    }, []);
 
-    const handleLastNameOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormValues({
-            ...formValues,
-            lastName: e.target.value,
+    const handleLastNameOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormValues((prev) => {
+            return {
+                ...prev,
+                lastName: e.target.value,
+            };
         });
-    };
+    }, []);
 
-    const handlePhoneNumberOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormValues({
-            ...formValues,
-            phoneNumber: e.target.value,
+    const handlePhoneNumberOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormValues((prev) => {
+            return {
+                ...prev,
+                phoneNumber: e.target.value,
+            };
         });
-    };
+    }, []);
 
-    const handleAddressOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormValues({
-            ...formValues,
-            address: e.target.value,
+    const handleAddressOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormValues((prev) => {
+            return {
+                ...prev,
+                address: e.target.value,
+            };
         });
-    };
+    }, []);
+
+    useEffect(() => {
+        if (userToken) navigate('/');
+    }, [userToken]);
 
     return (
         <div className="wrapper">

@@ -1,4 +1,3 @@
-import { DocumentData, DocumentReference } from 'firebase/firestore';
 import { createAction, createAsyncAction } from 'typesafe-actions';
 import { WishList } from '../../models/wish-list';
 import { WishListActionType } from '../../type/wish-list-actions';

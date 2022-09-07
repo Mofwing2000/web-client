@@ -1,6 +1,4 @@
 import { createReducer, Reducer } from 'typesafe-actions';
-import AuthState from '../../models/auth';
-import { ActionType } from 'typesafe-actions';
 import { Top, Bottom, ProductState } from '../../models/product';
 import { ProductActionType } from '../../type/product-actions';
 import { AnyAction, PayloadAction } from '@reduxjs/toolkit';

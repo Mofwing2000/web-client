@@ -1,16 +1,14 @@
-import { addDoc, collection, doc, getDoc, query, runTransaction, setDoc, updateDoc, where } from 'firebase/firestore';
+import { collection, doc, getDoc, query, runTransaction, setDoc } from 'firebase/firestore';
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { db } from '../../config/firebase.config';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import { Cart, CartState } from '../../models/cart';
-import { Bottom, Product, ProductState, Top } from '../../models/product';
+import { Product, ProductState } from '../../models/product';
 import { clearCartAsync, fetchCartAsync } from '../../store/cart/cart.action';
 import { selectCart } from '../../store/cart/cart.reducer';
 import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
 import { selectProduct } from '../../store/product/product.reducer';
 import { Order, OrderedItem, OrderState, PaymentMethod, ShippingClass, ShippingType } from '../../models/order';
-import './checkout.scss';
-import cuid from 'cuid';
 import { toast } from 'react-toastify';
 import { FirebaseError } from '@firebase/util';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
@@ -18,6 +16,8 @@ import { Link } from 'react-router-dom';
 import { UserState } from '../../models/user';
 import { selectUser } from '../../store/user/user.reducer';
 import { useTranslation } from 'react-i18next';
+
+import './checkout.scss';
 
 const Checkout = () => {
     const { user } = useAppSelector<UserState>(selectUser);
@@ -33,6 +33,7 @@ const Checkout = () => {
     const dispatch = useAppDispatch();
     const [isCreatingOrder, setIsCreatingOrder] = useState<boolean>(false);
     const { t } = useTranslation(['common', 'order', 'user']);
+
     let isLoading = useMemo(() => {
         return isCartLoading || isProductLoading || isCreatingOrder;
     }, [isCartLoading, isProductLoading, isCreatingOrder]);

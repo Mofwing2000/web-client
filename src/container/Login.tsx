@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,9 +14,8 @@ const Login = () => {
     const { t } = useTranslation(['common', 'user']);
     const { userToken } = useAppSelector<AuthState>(selectAuth);
     const navigate = useNavigate();
-    useEffect(() => {
-        if (userToken) navigate('/');
-    }, [userToken]);
+
+    const dispatch = useAppDispatch();
     const schema = yup
         .object({
             email: yup
@@ -31,7 +30,6 @@ const Login = () => {
                 .min(8, `${t('common:validPasswordLength')}`),
         })
         .required();
-    const dispatch = useAppDispatch();
     const {
         register,
         handleSubmit,
@@ -44,23 +42,31 @@ const Login = () => {
         email: '',
         password: '',
     });
-    const onSubmit = (data: LoginInput) => {
+    const onSubmit = useCallback((data: LoginInput) => {
         dispatch(loginAsync.request(data));
-    };
+    }, []);
 
-    const handleEmailOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormValues({
-            ...formValues,
-            email: e.target.value,
+    const handleEmailOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormValues((prev) => {
+            return {
+                ...prev,
+                email: e.target.value,
+            };
         });
-    };
+    }, []);
 
-    const handlePasswordOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormValues({
-            ...formValues,
-            password: e.target.value,
+    const handlePasswordOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormValues((prev) => {
+            return {
+                ...prev,
+                password: e.target.value,
+            };
         });
-    };
+    }, []);
+
+    useEffect(() => {
+        if (userToken) navigate('/');
+    }, [userToken]);
 
     return (
         <div className="wrapper">

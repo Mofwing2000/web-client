@@ -2,7 +2,7 @@ import { FirebaseError } from '@firebase/util';
 import { collection, doc, getDoc, query } from 'firebase/firestore';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
 import ProductItem from '../../components/product-item/ProductItem';
@@ -17,7 +17,9 @@ import { selectProduct } from '../../store/product/product.reducer';
 import { selectUser } from '../../store/user/user.reducer';
 import { fetchWishListAsync, toggleWishListAsync } from '../../store/wish-list/wish-list.action';
 import { selectWishList } from '../../store/wish-list/wish-list.reducer';
+
 import './collection-page.scss';
+
 const CollectionPage = () => {
     const [collectionData, setCollectionData] = useState<Collection>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -27,7 +29,6 @@ const CollectionPage = () => {
     const { user } = useAppSelector<UserState>(selectUser);
     const { wishList, isWishListLoading } = useAppSelector<WishListState>(selectWishList);
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
 
     const fetchProductQuery = useMemo(() => {
         return query(collection(db, 'product'));

@@ -1,6 +1,6 @@
 import { FirebaseError } from '@firebase/util';
 import { doc, getDoc, runTransaction, updateDoc } from 'firebase/firestore';
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -11,11 +11,11 @@ import { useAppSelector } from '../../helpers/hooks';
 import { Order, OrderState } from '../../models/order';
 import { Bottom, Top } from '../../models/product';
 import { User, UserState } from '../../models/user';
-import '../../sass/common.scss';
 import { selectUser } from '../../store/user/user.reducer';
+
+import '../../sass/common.scss';
 import '../../sass/common.scss';
 import './order-detail.scss';
-import { promises } from 'stream';
 
 const OrderDetail = () => {
     const { t } = useTranslation(['common', 'order', 'user', 'product']);
@@ -101,7 +101,7 @@ const OrderDetail = () => {
         }
     }, [user]);
 
-    const handleMarkShipped = async () => {
+    const handleMarkShipped = useCallback(async () => {
         setIsLoading(true);
         try {
             await updateDoc(doc(db, 'order', orderData!.id), {
@@ -114,9 +114,9 @@ const OrderDetail = () => {
             if (error instanceof FirebaseError) toast.error(error.message);
             setIsLoading(false);
         }
-    };
+    }, []);
 
-    const handleCancelOrder = async () => {
+    const handleCancelOrder = useCallback(async () => {
         if (trackingFormRef.current!.classList.contains('show')) trackingFormRef.current!.classList.remove('show');
         setIsLoading(false);
         try {
@@ -130,7 +130,7 @@ const OrderDetail = () => {
             if (error instanceof FirebaseError) toast.error(error.message);
             setIsLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchData();

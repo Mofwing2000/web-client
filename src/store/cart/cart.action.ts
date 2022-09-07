@@ -1,4 +1,3 @@
-import { DocumentData, DocumentReference } from 'firebase/firestore';
 import { createAction, createAsyncAction } from 'typesafe-actions';
 import { Cart, CartItem } from '../../models/cart';
 import { CartActionType } from '../../type/cart-actions';

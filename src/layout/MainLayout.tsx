@@ -16,11 +16,6 @@ const MainLayout = () => {
                 <Outlet context={user} />
             </main>
             <Footer />
-
-            {/* <Routes>
-                <Route path="/dashboard" element={<DashBoard />}></Route>
-                <Route path="/user" element={<User />}></Route>
-            </Routes> */}
         </>
     );
 };

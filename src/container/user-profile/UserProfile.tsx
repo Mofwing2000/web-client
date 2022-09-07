@@ -2,7 +2,7 @@ import { FirebaseError } from '@firebase/util';
 import { yupResolver } from '@hookform/resolvers/yup';
 import cuid from 'cuid';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -13,8 +13,9 @@ import { storage } from '../../config/firebase.config';
 import { DEFAULT_USER_PHOTO_URL as defaultPhotoUrl } from '../../constants/commons';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import { User, UserState } from '../../models/user';
-import { fetchUserAsync, updateUserAsync } from '../../store/user/user.action';
+import { updateUserAsync } from '../../store/user/user.action';
 import { selectUser } from '../../store/user/user.reducer';
+
 import './user-profile.scss';
 
 interface FormValue {
@@ -29,6 +30,8 @@ const UserManagePanel = () => {
     const { user, isUserLoading } = useAppSelector<UserState>(selectUser);
     const { t } = useTranslation(['common', 'user']);
     const dispatch = useAppDispatch();
+    const [avatar, setAvatar] = useState<File>();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const schema = yup
         .object({
             firstName: yup
@@ -61,9 +64,6 @@ const UserManagePanel = () => {
         })
         .required();
 
-    const [avatar, setAvatar] = useState<File>();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
     const navigate = useNavigate();
 
     const userFormValueData = useMemo(() => {
@@ -84,46 +84,48 @@ const UserManagePanel = () => {
         resolver: yupResolver(schema),
         defaultValues: { ...userFormValueData },
     });
+
     const [userFormValue, setUserFormValue] = useState<User>({ ...user! });
 
-    function isFileImage(file: File) {
+    const isFileImage = useCallback((file: File) => {
         return file && file.type.split('/')[0] === 'image';
-    }
+    }, []);
 
-    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserFormValue({
-            ...userFormValue,
-            password: e.target.value,
+    const handleFirstNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setUserFormValue((prev) => {
+            return {
+                ...prev,
+                firstName: e.target.value,
+            };
         });
-    };
+    }, []);
 
-    const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserFormValue({
-            ...userFormValue,
-            firstName: e.target.value,
+    const handleLastNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setUserFormValue((prev) => {
+            return {
+                ...prev,
+                lastName: e.target.value,
+            };
         });
-    };
+    }, []);
 
-    const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserFormValue({
-            ...userFormValue,
-            lastName: e.target.value,
+    const handlePhoneNumberChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setUserFormValue((prev) => {
+            return {
+                ...prev,
+                phoneNumber: e.target.value,
+            };
         });
-    };
+    }, []);
 
-    const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserFormValue({
-            ...userFormValue,
-            phoneNumber: e.target.value,
+    const handleAddressChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setUserFormValue((prev) => {
+            return {
+                ...prev,
+                address: e.target.value,
+            };
         });
-    };
-
-    const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserFormValue({
-            ...userFormValue,
-            address: e.target.value,
-        });
-    };
+    }, []);
 
     const uploadAvatar = async () => {
         if (avatar) {
@@ -157,11 +159,6 @@ const UserManagePanel = () => {
         uploadAvatar();
     }, [avatar]);
 
-    // useEffect(() => {
-    //     if (formState.isSubmitSuccessful) {
-    //         reset({ ...user });
-    //     }
-    // }, [formState, userFormValue, reset]);
     const onSubmit = async () => {
         dispatch(updateUserAsync.request(userFormValue));
     };
@@ -220,10 +217,9 @@ const UserManagePanel = () => {
                                     id="password"
                                     // defaultValue={user.password}
                                     value={userFormValue.password}
+                                    disabled
                                     aria-describedby="password"
-                                    {...register('password', {
-                                        onChange: handlePasswordChange,
-                                    })}
+                                    {...register('password')}
                                     placeholder="8 characters at least"
                                 />
                                 <p>{errors.password?.message}</p>

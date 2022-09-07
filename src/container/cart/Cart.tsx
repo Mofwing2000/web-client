@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import LoadingModal from '../../components/loading-modal/LoadingModal';
 import { db } from '../../config/firebase.config';
-import { DEFAULT_PRODUCT_PHOTO_URL as defaultProductPhoto } from '../../constants/commons';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import { CartItem, CartState } from '../../models/cart';
 import { ProductState } from '../../models/product';
@@ -19,6 +18,8 @@ import {
 import { selectCart } from '../../store/cart/cart.reducer';
 import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
 import { selectProduct } from '../../store/product/product.reducer';
+
+import { DEFAULT_PRODUCT_PHOTO_URL as defaultProductPhoto } from '../../constants/commons';
 import './cart.scss';
 
 const CartPage = () => {
@@ -26,11 +27,12 @@ const CartPage = () => {
     const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
     const { t } = useTranslation(['common', 'order']);
     const navigate = useNavigate();
-    // const [cartProducts , setCartProducts]  = useState<(Top|Bottom)[]>()
     const dispatch = useAppDispatch();
+
     const isLoading = useMemo(() => {
         return isCartLoading || isProductLoading;
     }, [isCartLoading, isProductLoading]);
+
     const fetchProductQuery = useMemo(() => {
         if (cart) return query(collection(db, 'product'));
     }, [cart]);
