@@ -69,5 +69,8 @@
     "loginToComment": "Đăng nhập để bình luận",
     "loadMore": "Tải thêm...",
     "noItemWishList": "Không có sản phẩm yêu thích",
-    "noItemFound": "Không có sản phẩm nào"
+    "noItemFound": "Không có sản phẩm nào",
+    "commentLimitLength": "Đã đạt giới hạn số lượng ký tự cho phép",
+    "rating": "Đánh giá",
+    "outOf5": "trên 5"
 }

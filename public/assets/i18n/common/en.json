@@ -69,5 +69,8 @@
     "loginToComment": "Login to comment",
     "loadMore": "Load more...",
     "noItemWishList": "No item in wishlist",
-    "noItemFound": "No item found"
+    "noItemFound": "No item found",
+    "commentLimitLength": "Characters number limit reached",
+    "rating": "Rating",
+    "outOf5": "out of 5"
 }

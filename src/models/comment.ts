@@ -5,6 +5,7 @@ export interface CommentItem {
     avatar: string;
     content: string;
     createdAt: Date;
+    rating: number;
 }
 export interface Comment {
     id: string;

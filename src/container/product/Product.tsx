@@ -28,6 +28,7 @@ import { firebaseRelativeDateFormat } from '../../helpers/common';
 import { UserState } from '../../models/user';
 import { selectUser } from '../../store/user/user.reducer';
 import { selectCart } from '../../store/cart/cart.reducer';
+import { Rating } from 'react-simple-star-rating';
 
 interface CommentForm {
     content: string;
@@ -40,6 +41,7 @@ const Product = () => {
             content: yup
                 .string()
                 .trim()
+                .max(200, `${t('common:commentLimitLength')}`)
                 .required(`${t('common:requiredMessage')}`),
         })
         .required();
@@ -55,6 +57,7 @@ const Product = () => {
     const [commentData, setCommentData] = useState<Comment>();
     const [currentIndex, setCurrentIndex] = useState<number>(5);
     const { cart, isCartLoading } = useAppSelector<CartState>(selectCart);
+    const [rating, setRating] = useState<number>(0);
 
     const {
         register,
@@ -76,6 +79,12 @@ const Product = () => {
         setSelectedSize(size);
     }, []);
 
+    const hasRatingCommentNumber = useMemo(() => {
+        if (commentData && commentData.commentItemList.length) {
+            return commentData.commentItemList.filter((item) => item.rating > 0).length;
+        } else return 0;
+    }, [commentData]);
+
     const quantityIncart = useMemo(() => {
         if (cart && productData) {
             return cart.cartItems.reduce((total, current) => {
@@ -84,6 +93,10 @@ const Product = () => {
             }, 0);
         }
     }, [cart, productData]);
+
+    const handleRating = useCallback((rate: number) => {
+        setRating(rate / 20);
+    }, []);
 
     const handleAddToCart = useCallback(() => {
         if (!user) {
@@ -266,8 +279,6 @@ const Product = () => {
         async (id: string) => {
             setIsLoading(true);
             if (productData) {
-                console.log('asdffadsadfsfdas12312312');
-
                 const docRef = doc(db, 'comment', productData!.id);
                 try {
                     await runTransaction(db, async (transaction) => {
@@ -295,8 +306,6 @@ const Product = () => {
         async (data) => {
             if (productData) {
                 setIsLoading(true);
-                console.log(productData);
-
                 const commentItem: CommentItem = {
                     id: cuid(),
                     userId: user!.id,
@@ -304,17 +313,17 @@ const Product = () => {
                     avatar: user!.photoUrl,
                     content: data.content,
                     createdAt: new Date(Date.now()),
+                    rating: rating,
                 };
-                console.log(commentItem);
-
                 await sendComment(commentItem);
                 setIsLoading(false);
+                setRating(0);
                 reset({
                     content: '',
                 });
             }
         },
-        [commentData],
+        [commentData, rating],
     );
 
     useEffect(() => {
@@ -444,6 +453,181 @@ const Product = () => {
                             </div>
                         </div>
 
+                        <div className="product__rating">
+                            <h4 className="fw-2 mb-5">{t('common:rating')}</h4>
+                            <div className="d-flex align-items-center ">
+                                <div className="product__rating__rate me-3">
+                                    <p className="fs-1 fw-bold text-center">
+                                        {commentData && commentData.commentItemList.length
+                                            ? (
+                                                  commentData.commentItemList.reduce((total, current) => {
+                                                      if (current) return total + current.rating;
+                                                      else return total;
+                                                  }, 0) / hasRatingCommentNumber
+                                              ).toFixed(1)
+                                            : 0}
+                                    </p>
+                                    <p className="mb-0 text-center">{t('common:outOf5')}</p>
+                                </div>
+                                <ul className="flex-grow-1">
+                                    <div className="product__rating__content d-flex align-items-center">
+                                        <div className="me-2">
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                        </div>
+                                        <div className="product__rating__content__progress progress me-2 d-none d-sm-flex">
+                                            <div
+                                                className="progress-bar "
+                                                style={{
+                                                    width: `${
+                                                        commentData &&
+                                                        commentData.commentItemList.length &&
+                                                        (commentData.commentItemList.filter((item) => item.rating === 5)
+                                                            .length *
+                                                            100) /
+                                                            hasRatingCommentNumber
+                                                    }%`,
+                                                }}
+                                                role="progressbar"
+                                                aria-label="Example 1px high"
+                                            ></div>
+                                        </div>
+                                        <p className="mb-0 fw-bold">
+                                            {commentData &&
+                                                commentData.commentItemList.filter((item) => item.rating === 5).length}
+                                        </p>
+                                    </div>
+                                    <div className="product__rating__content d-flex align-items-center">
+                                        <div className="me-2">
+                                            <span className="product__rating__content__star fa fa-star "></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                        </div>
+
+                                        <div className="product__rating__content__progress progress me-2 d-none d-sm-flex">
+                                            <div
+                                                className="progress-bar "
+                                                style={{
+                                                    width: `${
+                                                        commentData &&
+                                                        commentData.commentItemList.length &&
+                                                        (commentData.commentItemList.filter((item) => item.rating === 4)
+                                                            .length *
+                                                            100) /
+                                                            hasRatingCommentNumber
+                                                    }%`,
+                                                }}
+                                                role="progressbar"
+                                                aria-label="Example 1px high"
+                                            ></div>
+                                        </div>
+                                        <p className="mb-0 fw-bold">
+                                            {commentData &&
+                                                commentData.commentItemList.filter((item) => item.rating === 4).length}
+                                        </p>
+                                    </div>
+                                    <div className="product__rating__content d-flex align-items-center">
+                                        <div className="me-2">
+                                            <span className="product__rating__content__star fa fa-star "></span>
+                                            <span className="product__rating__content__star fa fa-star "></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                        </div>
+
+                                        <div className="product__rating__content__progress progress me-2 d-none d-sm-flex">
+                                            <div
+                                                className="progress-bar "
+                                                style={{
+                                                    width: `${
+                                                        commentData &&
+                                                        commentData.commentItemList.length &&
+                                                        (commentData.commentItemList.filter((item) => item.rating === 3)
+                                                            .length *
+                                                            100) /
+                                                            hasRatingCommentNumber
+                                                    }%`,
+                                                }}
+                                                role="progressbar"
+                                                aria-label="Example 1px high"
+                                            ></div>
+                                        </div>
+                                        <p className="mb-0 fw-bold">
+                                            {commentData &&
+                                                commentData.commentItemList.filter((item) => item.rating === 3).length}
+                                        </p>
+                                    </div>
+                                    <div className="product__rating__content d-flex align-items-center">
+                                        <div className="me-2">
+                                            <span className="product__rating__content__star fa fa-star "></span>
+                                            <span className="product__rating__content__star fa fa-star "></span>
+                                            <span className="product__rating__content__star fa fa-star "></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                        </div>
+
+                                        <div className="product__rating__content__progress progress me-2 d-none d-sm-flex">
+                                            <div
+                                                className="progress-bar "
+                                                style={{
+                                                    width: `${
+                                                        commentData &&
+                                                        commentData.commentItemList.length &&
+                                                        (commentData.commentItemList.filter((item) => item.rating === 2)
+                                                            .length *
+                                                            100) /
+                                                            hasRatingCommentNumber
+                                                    }%`,
+                                                }}
+                                                role="progressbar"
+                                                aria-label="Example 1px high"
+                                            ></div>
+                                        </div>
+                                        <p className="mb-0 fw-bold">
+                                            {commentData &&
+                                                commentData.commentItemList.filter((item) => item.rating === 2).length}
+                                        </p>
+                                    </div>
+                                    <div className="product__rating__content d-flex align-items-center">
+                                        <div className="me-2">
+                                            <span className="product__rating__content__star fa fa-star "></span>
+                                            <span className="product__rating__content__star fa fa-star "></span>
+                                            <span className="product__rating__content__star fa fa-star "></span>
+                                            <span className="product__rating__content__star fa fa-star "></span>
+                                            <span className="product__rating__content__star fa fa-star checked"></span>
+                                        </div>
+
+                                        <div className="product__rating__content__progress progress me-2 d-none d-sm-flex">
+                                            <div
+                                                className="progress-bar "
+                                                style={{
+                                                    width: `${
+                                                        commentData &&
+                                                        commentData.commentItemList.length &&
+                                                        (commentData.commentItemList.filter((item) => item.rating === 1)
+                                                            .length *
+                                                            100) /
+                                                            hasRatingCommentNumber
+                                                    }%`,
+                                                }}
+                                                role="progressbar"
+                                                aria-label="Example 1px high"
+                                            ></div>
+                                        </div>
+                                        <p className="mb-0 fw-bold">
+                                            {commentData &&
+                                                commentData.commentItemList.filter((item) => item.rating === 1).length}
+                                        </p>
+                                    </div>
+                                </ul>
+                            </div>
+                        </div>
+
                         <div className="product__comment">
                             {user ? (
                                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -457,6 +641,7 @@ const Product = () => {
                                             id="comment-textarea"
                                             rows={3}
                                         ></textarea>
+                                        <Rating className="mt-3" onClick={handleRating} ratingValue={rating} />
                                         <p className="text-danger">{errors.content?.message}</p>
                                     </div>
                                     <button className="btn btn-primary mt-3 " type="submit">
@@ -501,8 +686,18 @@ const Product = () => {
                                                         <p className="product__comment__item__main__content ms-3">
                                                             {commentItem.content}
                                                         </p>
+                                                        <div className="ms-3">
+                                                            {[1, 2, 3, 4, 5].map((cur) => (
+                                                                <span
+                                                                    key={cur}
+                                                                    className={`product__comment__item__info__rating fa fa-star ${
+                                                                        cur > commentItem.rating ? '' : 'checked'
+                                                                    }`}
+                                                                ></span>
+                                                            ))}
+                                                        </div>
                                                         <button
-                                                            className={`product__comment__item__main__btn btn btn-link ${
+                                                            className={`product__comment__item__main__btn btn btn-link mt-3${
                                                                 commentItem.userId === user?.id ? '' : 'd-none'
                                                             }`}
                                                             onClick={() => handleCommentDelete(commentItem.id)}

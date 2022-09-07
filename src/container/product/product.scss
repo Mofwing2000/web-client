@@ -125,8 +125,28 @@
             }
         }
     }
-    &__comment {
+    &__rating {
         margin-top: 200px;
+        &__rate {
+            width: 80px;
+            flex-shrink: 0;
+        }
+        &__content {
+            &__progress {
+                min-width: 300px;
+                height: 10px;
+            }
+            &__star {
+                color: rgb(204, 204, 204);
+                &.checked {
+                    color: $primary-color;
+                }
+            }
+        }
+    }
+
+    &__comment {
+        margin-top: 100px;
         &__input {
             resize: none;
         }
@@ -138,6 +158,13 @@
                     width: 100px;
                     height: 100px;
                     border-radius: 50%;
+                }
+                &__rating {
+                    color: rgb(204, 204, 204);
+
+                    &.checked {
+                        color: $primary-color;
+                    }
                 }
             }
         }
