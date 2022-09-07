@@ -67,7 +67,6 @@ const Checkout = () => {
         try {
             const docSnap = await getDoc(doc(db, 'product', id));
             if (docSnap.exists()) {
-                console.log((docSnap.data() as Product).quantity, cartItemQuantity[(docSnap.data() as Product).id]);
                 if ((docSnap.data() as Product).quantity < cartItemQuantity[(docSnap.data() as Product).id])
                     return true;
                 else return false;

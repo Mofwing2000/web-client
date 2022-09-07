@@ -68,7 +68,6 @@ const Signup = () => {
 
     const dispatch = useAppDispatch();
 
-    // const onSubmit = handleSubmit((data) => console.log(data));
     const onSubmit = (data: SignupInput) => {
         dispatch(signupAsync.request(data));
     };
