@@ -9,7 +9,6 @@ import { DEFAULT_PRODUCT_PHOTO_URL as defaultProductPhoto } from '../../constant
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import { CartItem, CartState } from '../../models/cart';
 import { ProductState } from '../../models/product';
-import { UserState } from '../../models/user';
 import {
     changeQuantityCartAsync,
     decreaseCartAsync,
@@ -20,12 +19,11 @@ import {
 import { selectCart } from '../../store/cart/cart.reducer';
 import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
 import { selectProduct } from '../../store/product/product.reducer';
-import { selectUser } from '../../store/user/user.reducer';
 import './cart.scss';
+
 const CartPage = () => {
     const { cart, isCartLoading } = useAppSelector<CartState>(selectCart);
     const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
-    const { user } = useAppSelector<UserState>(selectUser);
     const { t } = useTranslation(['common', 'order']);
     const navigate = useNavigate();
     // const [cartProducts , setCartProducts]  = useState<(Top|Bottom)[]>()

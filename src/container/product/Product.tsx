@@ -1,34 +1,34 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { getDoc, doc, query, collection, orderBy, onSnapshot, setDoc, runTransaction } from 'firebase/firestore';
-import { db } from '../../config/firebase.config';
-import { Top, Bottom, Color, Size } from '../../models/product';
-import LoadingModal from '../../components/loading-modal/LoadingModal';
-import { FreeMode, Navigation, Thumbs } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore, { Autoplay } from 'swiper';
 import { FirebaseError } from '@firebase/util';
-import { toast } from 'react-toastify';
+import { yupResolver } from '@hookform/resolvers/yup';
+import cuid from 'cuid';
+import { doc, getDoc, onSnapshot, runTransaction, setDoc } from 'firebase/firestore';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { CartItem, CartState } from '../../models/cart';
-import { addCartAsync, fetchCartAsync } from '../../store/cart/cart.action';
-import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Rating } from 'react-simple-star-rating';
+import { toast } from 'react-toastify';
+import SwiperCore, { Autoplay, FreeMode, Navigation, Thumbs } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import * as yup from 'yup';
+import LoadingModal from '../../components/loading-modal/LoadingModal';
+import { db } from '../../config/firebase.config';
 import { DEFAULT_USER_PHOTO_URL as defaultPhotoImg } from '../../constants/commons';
+import { firebaseRelativeDateFormat } from '../../helpers/common';
+import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
+import { CartItem, CartState } from '../../models/cart';
+import { Comment, CommentItem } from '../../models/comment';
+import { Bottom, Color, Size, Top } from '../../models/product';
+import { UserState } from '../../models/user';
+import { addCartAsync, fetchCartAsync } from '../../store/cart/cart.action';
+import { selectCart } from '../../store/cart/cart.reducer';
+import { selectUser } from '../../store/user/user.reducer';
+
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import '../../sass/common.scss';
 import './product.scss';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Comment, CommentItem } from '../../models/comment';
-import cuid from 'cuid';
-import { firebaseRelativeDateFormat } from '../../helpers/common';
-import { UserState } from '../../models/user';
-import { selectUser } from '../../store/user/user.reducer';
-import { selectCart } from '../../store/cart/cart.reducer';
-import { Rating } from 'react-simple-star-rating';
 
 interface CommentForm {
     content: string;
@@ -741,7 +741,7 @@ const Product = () => {
                     <p>{t('common:noData')}</p>
                 </div>
             )}
-            {isLoading && <LoadingModal />}
+            {(isLoading || isCartLoading) && <LoadingModal />}
         </>
     );
 };
