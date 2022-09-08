@@ -72,5 +72,7 @@
     "noItemFound": "No item found",
     "commentLimitLength": "Characters number limit reached",
     "rating": "Rating",
-    "outOf5": "out of 5"
+    "outOf5": "out of 5",
+    "orderSucceed": "Order succeed",
+    "autoHandleMessage": "When transaction completed, your order will be automatically handle by our staffs"
 }

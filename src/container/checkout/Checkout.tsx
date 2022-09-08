@@ -101,7 +101,7 @@ const Checkout = () => {
                 };
                 const checkLimitArray = await checkLimit();
                 if (checkLimitArray.find((item) => item === true)) {
-                    toast.error('Limit quantity reached');
+                    toast.error(t('common:limitQuantityReached'));
                     setIsCreatingOrder(false);
                     return;
                 } else {
@@ -128,7 +128,7 @@ const Checkout = () => {
                                 await update();
                             }
                             dispatch(clearCartAsync.request());
-                            toast.success('Order succeed');
+                            toast.success(t('common:orderSucceed'));
                             setIsCreatingOrder(false);
                         } catch (error) {
                             if (error instanceof FirebaseError) toast.error(error.message);
@@ -328,10 +328,7 @@ const Checkout = () => {
                                                     <p className="mb-0">
                                                         {t('order:transferContent')}: OrderId_Full name.
                                                     </p>
-                                                    <p>
-                                                        When transaction completed, your order will be automatically
-                                                        handle by our staff.
-                                                    </p>
+                                                    <p>{t('order:autoHandleMessage')}</p>
                                                 </div>
                                             </div>
                                         </div>
