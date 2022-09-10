@@ -29,6 +29,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import '../../sass/common.scss';
 import './product.scss';
+// import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
+// import { selectProduct } from '../../store/product/product.reducer';
 
 interface CommentForm {
     content: string;
@@ -60,6 +62,10 @@ const Product = () => {
     const [currentIndex, setCurrentIndex] = useState<number>(5);
     const { cart, isCartLoading } = useAppSelector<CartState>(selectCart);
     const [rating, setRating] = useState<number>(0);
+    // const productQuery = useMemo(() => {
+    //     if (productData) return query(collection(db, 'product'), where('productType', '==', productData.productType));
+    // }, [productData]);
+    // const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
 
     const {
         register,
@@ -239,7 +245,7 @@ const Product = () => {
 
     const handleIncreaseQuantity = useCallback(() => {
         if (productData && quantityIncart !== undefined) {
-            if (selectQuantity > productData.quantity - quantityIncart) toast.error(t('common:limitQuantityReached'));
+            if (selectQuantity >= productData.quantity - quantityIncart) toast.error(t('common:limitQuantityReached'));
             else setSelectQuantity(selectQuantity + 1);
         }
     }, [selectQuantity, productData, quantityIncart]);
@@ -352,6 +358,34 @@ const Product = () => {
         dispatch(fetchCartAsync.request());
     }, []);
 
+    // useEffect(() => {
+    //     if (productQuery) {
+    //         dispatch(fetchProductsAsync.request(productQuery));
+    //     }
+    //     return () => {
+    //         dispatch(clearProducts());
+    //     };
+    // }, [productQuery]);
+    // console.log(products);
+
+    // const newArr = useMemo(() => {
+    //     if (products && productData) {
+    //         // products.sort((a,b)=> a.category.filter(item => productData.category.includes(item) && item.isAvaiable === true).length - b.category.filter(item => productData.category.includes(item) && item.isAvaiable === true).length))
+    //         return products.sort(
+    //             (a, b) =>
+    //                 (b.category as any[]).filter(
+    //                     (item) => item.isCategory === true && productData.category.includes(item),
+    //                 ).length -
+    //                 (a.category as any[]).filter(
+    //                     (item) => item.isCategory === true && productData.category.includes(item),
+    //                 ).length,
+    //             // b.price - a.price,
+    //         );
+    //     }
+    // }, [products]);
+
+    // console.log(newArr);
+
     return (
         <>
             {productData ? (
@@ -391,9 +425,19 @@ const Product = () => {
                                 <div className="product__main__info__price">{productData.price + '$'}</div>
                                 <div className="product__main__info__quantity mt-2">
                                     <span className="product__main__info__quantity">{t('product:quantity')}: </span>
-                                    <span style={{ color: `${productData.quantity > 0 ? 'inherit' : '#e53637'}` }}>
-                                        {productData.quantity > 0 ? productData.quantity : `${t('product:outOfStock')}`}
-                                    </span>
+                                    {quantityIncart !== undefined && (
+                                        <span
+                                            style={{
+                                                color: `${
+                                                    productData.quantity - quantityIncart > 0 ? 'inherit' : '#e53637'
+                                                }`,
+                                            }}
+                                        >
+                                            {productData.quantity - quantityIncart > 0
+                                                ? productData.quantity - quantityIncart
+                                                : `${t('product:outOfStock')}`}
+                                        </span>
+                                    )}
                                 </div>
                                 <div className="product__main__info__color">{colorBar}</div>
                                 <div className="product__main__info__size d-flex gap-2 mb-5 flex-wrap">{sizeBar}</div>
@@ -627,6 +671,16 @@ const Product = () => {
                                 </ul>
                             </div>
                         </div>
+
+                        {/* {useMemo(() => {
+                            // products.sort((a,b)=> (a.category.filter(item => productData.category.includes(item) && item.isAvaiable === true).length) - (b.category.filter(item => productData.category.includes(item) && item.isAvaiable === true).length)))
+                            // if (products) {
+                            //     // const newArr = [...products];
+                            //     // return newArr.map((item) => <li key={item.id}>{item.price}</li>);
+                            //     return <li>asdf</li>;
+                            // }
+                            return <li>sdf</li>;
+                        }, [products])} */}
 
                         <div className="product__comment">
                             {user ? (
