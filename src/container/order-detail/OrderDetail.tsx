@@ -114,9 +114,10 @@ const OrderDetail = () => {
             if (error instanceof FirebaseError) toast.error(error.message);
             setIsLoading(false);
         }
-    }, []);
+    }, [orderData]);
 
     const handleCancelOrder = useCallback(async () => {
+        console.log('a');
         if (trackingFormRef.current!.classList.contains('show')) trackingFormRef.current!.classList.remove('show');
         setIsLoading(false);
         try {
@@ -130,7 +131,7 @@ const OrderDetail = () => {
             if (error instanceof FirebaseError) toast.error(error.message);
             setIsLoading(false);
         }
-    }, []);
+    }, [orderData]);
 
     useEffect(() => {
         fetchData();
