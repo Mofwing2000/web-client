@@ -1,15 +1,14 @@
-import { collection, onSnapshot, query } from 'firebase/firestore';
-import React, { FC, memo, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { db } from '../../config/firebase.config';
-import { Collection } from '../../models/collection';
+import { Link } from 'react-router-dom';
+import SwiperCore, { Autoplay, EffectFade, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { EffectFade, Navigation } from 'swiper';
-import SwiperCore, { Autoplay } from 'swiper';
-import './hero.scss';
+import { Collection } from '../../models/collection';
+
+import 'swiper/css';
+import 'swiper/css/bundle';
 import '../../sass/common.scss';
-import 'swiper/css/navigation';
-import { Link, useNavigate } from 'react-router-dom';
+import './hero.scss';
 
 interface IProps {
     collectionsData: Collection[];
@@ -22,7 +21,16 @@ const Hero: FC<IProps> = (props) => {
 
     return (
         <div className="hero">
-            <Swiper loop={true} modules={[Navigation, Autoplay, EffectFade]} autoplay={{ delay: 3000 }} effect={'fade'}>
+            <Swiper
+                loop={true}
+                modules={[Navigation, Autoplay, EffectFade]}
+                grabCursor={true}
+                autoplay={{
+                    delay: 2500,
+                    disableOnInteraction: false,
+                }}
+                effect={'fade'}
+            >
                 {collectionsData.length ? (
                     collectionsData.map((item, index) => (
                         <SwiperSlide className="hero__swiper" key={index}>
@@ -86,4 +94,4 @@ const Hero: FC<IProps> = (props) => {
     );
 };
 
-export default memo(Hero);
+export default Hero;
