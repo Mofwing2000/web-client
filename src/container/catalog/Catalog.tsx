@@ -162,7 +162,7 @@ const Catalog = () => {
     );
 
     const handlePageClick = (event: { selected: number }) => {
-        const newOffset = (event.selected * 5) % filteredProducts.length;
+        const newOffset = (event.selected * pageSize) % filteredProducts.length;
         setItemOffset(newOffset);
     };
 
@@ -185,11 +185,10 @@ const Catalog = () => {
             );
         }
     }, [wishList, currentFilteredProducts]);
-
     useEffect(() => {
         if (typeof queryString.parse(location.search).category === 'string') {
             setCategory(queryString.parse(location.search).category as TopCategory | BottomCategory);
-        }
+        } else setCategory(null);
         if (typeof queryString.parse(location.search).size === 'string')
             setSize((queryString.parse(location.search).size as string).split(',') as Size[]);
         else setSize([]);
