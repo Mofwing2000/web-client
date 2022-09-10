@@ -9,10 +9,11 @@ interface IProps {
     setPageSize: React.Dispatch<React.SetStateAction<PageLimit>>;
     setSortType: React.Dispatch<React.SetStateAction<PageOrderSort>>;
     setSortOrder: React.Dispatch<React.SetStateAction<PageOrder>>;
+    setPage: (event: { selected: number }) => void;
 }
 
 const OrderFilterBar: FC<IProps> = (props) => {
-    const { pageSize, sortType, sortOrder, setPageSize, setSortType, setSortOrder } = props;
+    const { pageSize, sortType, sortOrder, setPageSize, setSortType, setSortOrder, setPage } = props;
     const { t } = useTranslation(['common', 'order']);
     return (
         <div className="order-filter-bar mb-5">
@@ -23,7 +24,10 @@ const OrderFilterBar: FC<IProps> = (props) => {
                         id="pageLimit"
                         className="form-select cursor"
                         aria-label="pageLimit-select"
-                        onChange={(e) => setPageSize(e.target.value === '10' ? 10 : e.target.value === '20' ? 20 : 50)}
+                        onChange={(e) => {
+                            setPageSize(e.target.value === '10' ? 10 : e.target.value === '20' ? 20 : 50);
+                            setPage({ selected: 0 });
+                        }}
                         value={pageSize}
                     >
                         <option value="10">10</option>

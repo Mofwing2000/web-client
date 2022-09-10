@@ -33,6 +33,7 @@ const SearchPage = () => {
     const [sortType, setSortType] = useState<PageProductSort>('id');
     const [sortOrder, setSortOrder] = useState<PageOrder>('asc');
     const [currentFilteredProducts, setCurrentFilteredProducts] = useState<(Top | Bottom)[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(0);
 
     const fetchProductQuery = useMemo(() => {
         return query(collection(db, 'product'), orderBy(sortType, sortOrder));
@@ -58,6 +59,7 @@ const SearchPage = () => {
                 const newOffset = (event.selected * 5) % searchProducts.length;
                 setItemOffset(newOffset);
             }
+            setCurrentPage(event.selected);
         },
         [searchProducts],
     );
@@ -115,6 +117,7 @@ const SearchPage = () => {
                                         setPageSize={setPageSize}
                                         setSortType={setSortType}
                                         setSortOrder={setSortOrder}
+                                        setPage={handlePageClick}
                                     />
                                     <div className="row">{itemList}</div>
                                 </div>
@@ -126,7 +129,7 @@ const SearchPage = () => {
                         <p className="text-center fs-4">{t('common:noItemFound')}</p>
                     </div>
                 )}
-                <Pagination onPageChange={handlePageClick} pageCount={pageCount} />
+                <Pagination onPageChange={handlePageClick} pageCount={pageCount} curPage={currentPage} />
             </div>
             {isLoading && <LoadingModal />}
         </>

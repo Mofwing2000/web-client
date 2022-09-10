@@ -35,6 +35,7 @@ const Catalog = () => {
     const [pageSize, setPageSize] = useState<PageLimit>(10);
     const [sortType, setSortType] = useState<PageProductSort>('id');
     const [sortOrder, setSortOrder] = useState<PageOrder>('asc');
+    const [currentPage, setCurrentPage] = useState<number>(0);
 
     const [category, setCategory] = useState<TopCategory | BottomCategory | null>(() => {
         if (typeof queryString.parse(location.search).category === 'string') {
@@ -161,10 +162,16 @@ const Catalog = () => {
         [size],
     );
 
-    const handlePageClick = (event: { selected: number }) => {
-        const newOffset = (event.selected * pageSize) % filteredProducts.length;
-        setItemOffset(newOffset);
-    };
+    const handlePageClick = useCallback(
+        (event: { selected: number }) => {
+            if (filteredProducts) {
+                const newOffset = (event.selected * pageSize) % filteredProducts.length;
+                setItemOffset(newOffset);
+            }
+            setCurrentPage(event.selected);
+        },
+        [filteredProducts],
+    );
 
     const itemList = useMemo(() => {
         if (currentFilteredProducts.length) {
@@ -388,12 +395,13 @@ const Catalog = () => {
                                 setPageSize={setPageSize}
                                 setSortType={setSortType}
                                 setSortOrder={setSortOrder}
+                                setPage={handlePageClick}
                             />
                             <div className="row g-4">{itemList}</div>
                         </div>
                     </div>
                 </div>
-                <Pagination onPageChange={handlePageClick} pageCount={pageCount} />
+                <Pagination onPageChange={handlePageClick} pageCount={pageCount} curPage={currentPage} />
             </div>
             {isLoading && <LoadingModal />}
         </>

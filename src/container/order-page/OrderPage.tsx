@@ -1,5 +1,5 @@
 import { FirebaseError } from '@firebase/util';
-import { collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -27,13 +27,15 @@ const OrderPage = () => {
     const [itemOffset, setItemOffset] = useState<number>(0);
     const [currentFilteredOrder, setCurrentFilteredOrder] = useState<Order[]>();
     const { t } = useTranslation(['common', 'order']);
+    const [currentPage, setCurrentPage] = useState<number>(0);
 
     const handlePageClick = useCallback(
         (event: { selected: number }) => {
             if (ordersData) {
-                const newOffset = (event.selected * 5) % ordersData.length;
+                const newOffset = (event.selected * pageSize) % ordersData.length;
                 setItemOffset(newOffset);
             }
+            setCurrentPage(event.selected);
         },
         [ordersData],
     );
@@ -52,7 +54,6 @@ const OrderPage = () => {
             const filterQuery = query(
                 orderRef,
                 where('userId', '==', user.id),
-                limit(pageSize as number),
                 orderBy(
                     sortType === 'orderDate' ? 'orderDate' : sortType === 'orderState' ? 'orderState' : 'totalAmount',
                     sortOrder === 'asc' ? 'asc' : 'desc',
@@ -94,6 +95,7 @@ const OrderPage = () => {
                                 setPageSize={setPageSize}
                                 setSortType={setSortType}
                                 setSortOrder={setSortOrder}
+                                setPage={handlePageClick}
                             />
                             <div className="order-manage__table overflow-auto">
                                 {currentFilteredOrder && <OrderTable ordersData={currentFilteredOrder} />}
@@ -106,7 +108,7 @@ const OrderPage = () => {
                     <p className=" text-center">{t('common:noData')}</p>
                 </div>
             )}
-            <Pagination onPageChange={handlePageClick} pageCount={pageCount} />
+            <Pagination onPageChange={handlePageClick} pageCount={pageCount} curPage={currentPage} />
             {isLoading && <LoadingModal />}
         </>
     );
