@@ -44,7 +44,7 @@ async function toggleWishList(id: string, wishList: WishList) {
         await updateDoc(doc(db, 'wishList', wishList.id), {
             productIdList: [...newProductsList],
         });
-        if (i18n.language === 'en') toast.success('Added from wishList');
+        if (i18n.language === 'en') toast.success('Added to wishList');
         else if (i18n.language === 'vn') toast.success('Đã thêm vào danh sách yêu thích');
     }
     return {
