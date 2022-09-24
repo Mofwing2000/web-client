@@ -4,12 +4,12 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { useAppDispatch, useAppSelector } from '../helpers/hooks';
-import AuthState from '../models/auth';
-import { SignupInput } from '../models/form';
-import { signupAsync } from '../store/auth/auth.action';
-import { selectAuth } from '../store/root-reducer';
-
+import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
+import AuthState from '../../models/auth';
+import { SignupInput } from '../../models/form';
+import { signupAsync } from '../../store/auth/auth.action';
+import { selectAuth } from '../../store/root-reducer';
+import './signup.scss';
 const Signup = () => {
     const { t } = useTranslation(['common', 'user']);
     const navigate = useNavigate();
@@ -149,14 +149,14 @@ const Signup = () => {
     }, [userToken]);
 
     return (
-        <div className="wrapper">
+        <div className="wrapper vh-100 wh-100">
             <div className="container py-5 h-100">
                 <div className="row d-flex justify-content-center align-items-center h-100">
                     <div className="col-12 col-md-8 col-lg-6 col-xl-5">
                         <div className="card shadow-2-strong">
                             <form className="card-body p-5 " onSubmit={handleSubmit(onSubmit)} noValidate>
-                                <h3 className="mb-5">{t('common:signUp')}</h3>
-                                <div className="form-outline mb-4">
+                                <h3 className="mb-3 text-center">{t('common:signup')}</h3>
+                                <div className="form-outline mb-3">
                                     <label className="form-label" htmlFor="email">
                                         Email
                                     </label>
@@ -173,7 +173,7 @@ const Signup = () => {
                                 </div>
 
                                 <div className="row">
-                                    <div className="form-outline mb-4  col-6">
+                                    <div className="form-outline mb-3  col-6">
                                         <label className="form-label" htmlFor="firstName">
                                             {t('user:firstName')}
                                         </label>
@@ -189,7 +189,7 @@ const Signup = () => {
                                         {<p className="text-danger">{errors.firstName?.message}</p>}
                                     </div>
 
-                                    <div className="form-outline mb-4 col-6">
+                                    <div className="form-outline mb-3 col-6">
                                         <label className="form-label" htmlFor="lastName">
                                             {t('user:lastName')}
                                         </label>
@@ -206,7 +206,7 @@ const Signup = () => {
                                     </div>
                                 </div>
 
-                                <div className="form-outline mb-4">
+                                <div className="form-outline mb-3">
                                     <label className="form-label" htmlFor="password">
                                         {t('user:password')}
                                     </label>
@@ -222,7 +222,7 @@ const Signup = () => {
                                     <p className="text-danger">{errors.password?.message}</p>
                                 </div>
 
-                                <div className="form-outline mb-4">
+                                <div className="form-outline mb-3">
                                     <label className="form-label" htmlFor="confirmPassword">
                                         {t('user:confirmPassword')}
                                     </label>
@@ -238,7 +238,7 @@ const Signup = () => {
                                     <p className="text-danger">{errors.confirmPassword?.message}</p>
                                 </div>
 
-                                <div className="form-outline mb-4">
+                                <div className="form-outline mb-3">
                                     <label className="form-label" htmlFor="phoneNumber">
                                         {t('user:phoneNumber')}
                                     </label>
@@ -254,7 +254,7 @@ const Signup = () => {
                                     <p className="text-danger">{errors.phoneNumber?.message}</p>
                                 </div>
 
-                                <div className="form-outline mb-4">
+                                <div className="form-outline mb-3">
                                     <label className="form-label" htmlFor="address">
                                         {t('user:address')}
                                     </label>
@@ -270,10 +270,10 @@ const Signup = () => {
                                     <p className="text-danger">{errors.address?.message}</p>
                                 </div>
 
-                                <div className="justify-content-start mb-4">
+                                <div className="justify-content-start mb-3">
                                     <Link to="/login">{t('common:alreadyHaveAccount')}</Link>
                                 </div>
-                                <div className="mb-4 text-center">
+                                <div className="mb-3 text-center">
                                     <Link className="text-decoration-none text-danger" to={'/forgot-password'}>
                                         {t('common:forgotPassword')}
                                     </Link>

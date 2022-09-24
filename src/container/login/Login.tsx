@@ -4,11 +4,12 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { useAppDispatch, useAppSelector } from '../helpers/hooks';
-import AuthState from '../models/auth';
-import { LoginInput } from '../models/form';
-import { loginAsync } from '../store/auth/auth.action';
-import { selectAuth } from '../store/root-reducer';
+import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
+import AuthState from '../../models/auth';
+import { LoginInput } from '../../models/form';
+import { loginAsync } from '../../store/auth/auth.action';
+import { selectAuth } from '../../store/root-reducer';
+import './login.scss';
 
 const Login = () => {
     const { t } = useTranslation(['common', 'user']);
@@ -69,13 +70,13 @@ const Login = () => {
     }, [userToken]);
 
     return (
-        <div className="wrapper">
-            <div className="container py-5 h-100">
+        <div className="wrapper vh-100 wh-100">
+            <div className="container h-100">
                 <div className="row d-flex justify-content-center align-items-center h-100">
                     <div className="col-12 col-md-8 col-lg-6 col-xl-5">
                         <div className="card shadow-2-strong">
                             <form className="card-body p-5" onSubmit={handleSubmit(onSubmit)} noValidate>
-                                <h3 className="mb-5 text-center">{t('common:logIn')}</h3>
+                                <h3 className="mb-5 text-center">{t('common:login')}</h3>
                                 <div className="form-outline mb-4">
                                     <label className="form-label justify-content-start" htmlFor="typeEmailX-2">
                                         Email
