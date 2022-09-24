@@ -271,7 +271,7 @@ const Catalog = () => {
                                             aria-expanded="false"
                                             aria-controls="topCategories"
                                         >
-                                            {t('common:top')}
+                                            {t('product:top')}
                                         </h5>
                                     </div>
                                     <div className="collapse" id="topCategories">
@@ -285,7 +285,7 @@ const Catalog = () => {
                                                         key={index}
                                                         onClick={() => setCategory(categoryItem)}
                                                     >
-                                                        {categoryItem}
+                                                        {t(`product:${categoryItem}`)}
                                                     </li>
                                                 ))}
                                             </ul>
@@ -301,7 +301,7 @@ const Catalog = () => {
                                             aria-expanded="false"
                                             aria-controls="bottomCategories"
                                         >
-                                            {t('common:bottom')}
+                                            {t('product:bottom')}
                                         </h5>
                                     </div>
                                     <div className="collapse" id="bottomCategories">
@@ -315,7 +315,7 @@ const Catalog = () => {
                                                         key={index}
                                                         onClick={() => setCategory(categoryItem)}
                                                     >
-                                                        {categoryItem}
+                                                        {t(`product:${categoryItem}`)}
                                                     </li>
                                                 ))}
                                             </ul>

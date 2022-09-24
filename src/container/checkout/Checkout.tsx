@@ -328,7 +328,7 @@ const Checkout = () => {
                                                     <p className="mb-0">
                                                         {t('order:transferContent')}: OrderId_Full name.
                                                     </p>
-                                                    <p>{t('order:autoHandleMessage')}</p>
+                                                    <p>{t('common:autoHandleMessage')}</p>
                                                 </div>
                                             </div>
                                         </div>
