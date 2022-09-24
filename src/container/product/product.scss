@@ -144,7 +144,19 @@
             }
         }
     }
+    &__relate {
+        margin-top: 300px;
+        .swiper-wrapper {
+            width: 25% !important;
+            @media only screen and (max-width: $sm) {
+                width: 50% !important;
+            }
 
+            @media only screen and (max-width: $md) {
+                width: calc(100% / 3) !important;
+            }
+        }
+    }
     &__comment {
         margin-top: 100px;
         &__input {
@@ -166,6 +178,26 @@
                         color: $primary-color;
                     }
                 }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $sm) {
+    .product {
+        &__relate {
+            .swiper-wrapper {
+                width: 50% !important;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $md) {
+    .product {
+        &__relate {
+            .swiper-wrapper {
+                width: 100%/3 !important;
             }
         }
     }

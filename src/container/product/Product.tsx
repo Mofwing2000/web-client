@@ -1,7 +1,7 @@
 import { FirebaseError } from '@firebase/util';
 import { yupResolver } from '@hookform/resolvers/yup';
 import cuid from 'cuid';
-import { doc, getDoc, onSnapshot, runTransaction, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, query, runTransaction, setDoc, where } from 'firebase/firestore';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +18,7 @@ import { firebaseRelativeDateFormat } from '../../helpers/common';
 import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import { CartItem, CartState } from '../../models/cart';
 import { Comment, CommentItem } from '../../models/comment';
-import { Bottom, Color, Size, Top } from '../../models/product';
+import { Bottom, Color, ProductState, Size, Top } from '../../models/product';
 import { UserState } from '../../models/user';
 import { addCartAsync, fetchCartAsync } from '../../store/cart/cart.action';
 import { selectCart } from '../../store/cart/cart.reducer';
@@ -27,10 +27,15 @@ import { selectUser } from '../../store/user/user.reducer';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
+import 'swiper/css/bundle';
 import '../../sass/common.scss';
 import './product.scss';
-// import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
-// import { selectProduct } from '../../store/product/product.reducer';
+import { clearProducts, fetchProductsAsync } from '../../store/product/product.action';
+import { selectProduct } from '../../store/product/product.reducer';
+import { WishListState } from '../../models/wish-list';
+import { fetchWishListAsync, toggleWishListAsync } from '../../store/wish-list/wish-list.action';
+import { selectWishList } from '../../store/wish-list/wish-list.reducer';
+import ProductItem from '../../components/product-item/ProductItem';
 
 interface CommentForm {
     content: string;
@@ -62,10 +67,11 @@ const Product = () => {
     const [currentIndex, setCurrentIndex] = useState<number>(5);
     const { cart, isCartLoading } = useAppSelector<CartState>(selectCart);
     const [rating, setRating] = useState<number>(0);
-    // const productQuery = useMemo(() => {
-    //     if (productData) return query(collection(db, 'product'), where('productType', '==', productData.productType));
-    // }, [productData]);
-    // const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
+    const productQuery = useMemo(() => {
+        if (productData) return query(collection(db, 'product'), where('productType', '==', productData.productType));
+    }, [productData]);
+    const { products, isProductLoading } = useAppSelector<ProductState>(selectProduct);
+    const { wishList, isWishListLoading } = useAppSelector<WishListState>(selectWishList);
 
     const {
         register,
@@ -195,6 +201,60 @@ const Product = () => {
             )),
         [productData],
     );
+
+    const newArr = useMemo(() => {
+        if (products && productData) {
+            // products.sort((a,b)=> a.category.filter(item => productData.category.includes(item) && item.isAvaiable === true).length - b.category.filter(item => productData.category.includes(item) && item.isAvaiable === true).length))
+            return products.sort(
+                (a, b) =>
+                    (b.category as any[]).filter(
+                        (item) =>
+                            item.isCategory === true &&
+                            (productData.category as any[]).find(
+                                (prodDataItem) =>
+                                    prodDataItem.categoryName === item.categoryName && prodDataItem.isCategory === true,
+                            ),
+                    ).length -
+                    (a.category as any[]).filter(
+                        (item) =>
+                            item.isCategory === true &&
+                            (productData.category as any[]).find(
+                                (prodDataItem) =>
+                                    prodDataItem.categoryName === item.categoryName && prodDataItem.isCategory === true,
+                            ),
+                    ).length,
+                // b.price - a.price,
+            );
+        }
+    }, [products]);
+    console.log(newArr);
+
+    const handleToggleWishList = useCallback(
+        (id: string) => {
+            if (user) dispatch(toggleWishListAsync.request(id));
+            else navigate('/login');
+        },
+        [user],
+    );
+    if (1 < 0) handleToggleWishList('a');
+
+    const relateProdSlide = useMemo(
+        () =>
+            newArr &&
+            newArr.length > 0 &&
+            newArr.map((product, index) => (
+                <SwiperSlide className="product__main__gallery__slider__item" key={index}>
+                    <ProductItem
+                        product={product}
+                        onToggleWishList={() => handleToggleWishList(product.id)}
+                        isLiked={wishList !== null && wishList.productIdList.includes(product.id)}
+                    />
+                </SwiperSlide>
+            )),
+        [newArr, productData, wishList],
+    );
+    console.log(smallSlide);
+    console.log(relateProdSlide);
 
     const colorBar = useMemo(
         () =>
@@ -358,33 +418,18 @@ const Product = () => {
         dispatch(fetchCartAsync.request());
     }, []);
 
-    // useEffect(() => {
-    //     if (productQuery) {
-    //         dispatch(fetchProductsAsync.request(productQuery));
-    //     }
-    //     return () => {
-    //         dispatch(clearProducts());
-    //     };
-    // }, [productQuery]);
-    // console.log(products);
+    useEffect(() => {
+        if (productQuery) {
+            dispatch(fetchProductsAsync.request(productQuery));
+        }
+        return () => {
+            dispatch(clearProducts());
+        };
+    }, [productQuery]);
 
-    // const newArr = useMemo(() => {
-    //     if (products && productData) {
-    //         // products.sort((a,b)=> a.category.filter(item => productData.category.includes(item) && item.isAvaiable === true).length - b.category.filter(item => productData.category.includes(item) && item.isAvaiable === true).length))
-    //         return products.sort(
-    //             (a, b) =>
-    //                 (b.category as any[]).filter(
-    //                     (item) => item.isCategory === true && productData.category.includes(item),
-    //                 ).length -
-    //                 (a.category as any[]).filter(
-    //                     (item) => item.isCategory === true && productData.category.includes(item),
-    //                 ).length,
-    //             // b.price - a.price,
-    //         );
-    //     }
-    // }, [products]);
-
-    // console.log(newArr);
+    useEffect(() => {
+        if (!wishList && user) dispatch(fetchWishListAsync.request());
+    }, []);
 
     return (
         <>
@@ -395,12 +440,17 @@ const Product = () => {
                             <div className="product__main__gallery col-lg-6">
                                 <div className="product__main__gallery__container">
                                     <Swiper
-                                        // loop={true}
+                                        loop={true}
                                         spaceBetween={10}
                                         thumbs={{
                                             swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
                                         }}
                                         modules={[FreeMode, Navigation, Thumbs]}
+                                        grabCursor={true}
+                                        autoplay={{
+                                            delay: 2500,
+                                            disableOnInteraction: false,
+                                        }}
                                     >
                                         {bigSlide}
                                     </Swiper>
@@ -408,11 +458,15 @@ const Product = () => {
                                 <div className="product__main__gallery__slider mt-3">
                                     <Swiper
                                         onSwiper={setThumbsSwiper}
-                                        // loop={true}
+                                        loop={true}
                                         spaceBetween={10}
                                         slidesPerView={4}
                                         freeMode={true}
                                         watchSlidesProgress={true}
+                                        autoplay={{
+                                            delay: 2500,
+                                            disableOnInteraction: false,
+                                        }}
                                         modules={[FreeMode, Navigation, Thumbs]}
                                         className="product__main__gallery__slider__container"
                                     >
@@ -496,7 +550,21 @@ const Product = () => {
                                 </div>
                             </div>
                         </div>
-
+                        <div className="product__relate">
+                            <h3 className="text-center">{t('common:relatedProduct')}</h3>
+                            <Swiper
+                                modules={[Navigation, Autoplay]}
+                                // loop={true}
+                                grabCursor={true}
+                                autoplay={{
+                                    delay: 2500,
+                                    disableOnInteraction: false,
+                                }}
+                                slidesPerView={'auto'}
+                            >
+                                {relateProdSlide}
+                            </Swiper>
+                        </div>
                         <div className="product__rating">
                             <h4 className="fw-2 mb-5">{t('common:rating')}</h4>
                             <div className="d-flex align-items-center ">
@@ -672,16 +740,6 @@ const Product = () => {
                             </div>
                         </div>
 
-                        {/* {useMemo(() => {
-                            // products.sort((a,b)=> (a.category.filter(item => productData.category.includes(item) && item.isAvaiable === true).length) - (b.category.filter(item => productData.category.includes(item) && item.isAvaiable === true).length)))
-                            // if (products) {
-                            //     // const newArr = [...products];
-                            //     // return newArr.map((item) => <li key={item.id}>{item.price}</li>);
-                            //     return <li>asdf</li>;
-                            // }
-                            return <li>sdf</li>;
-                        }, [products])} */}
-
                         <div className="product__comment">
                             {user ? (
                                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -751,7 +809,7 @@ const Product = () => {
                                                             ))}
                                                         </div>
                                                         <button
-                                                            className={`product__comment__item__main__btn btn btn-link mt-3${
+                                                            className={`product__comment__item__main__btn btn btn-link mt-3 ${
                                                                 commentItem.userId === user?.id ? '' : 'd-none'
                                                             }`}
                                                             onClick={() => handleCommentDelete(commentItem.id)}
@@ -795,7 +853,7 @@ const Product = () => {
                     <p>{t('common:noData')}</p>
                 </div>
             )}
-            {(isLoading || isCartLoading) && <LoadingModal />}
+            {(isLoading || isCartLoading || isProductLoading || isWishListLoading) && <LoadingModal />}
         </>
     );
 };
