@@ -75,5 +75,8 @@
     "outOf5": "out of 5",
     "orderSucceed": "Order succeed",
     "autoHandleMessage": "When transaction completed, your order will be automatically handle by our staffs",
-    "cartNoItem": "No item in cart"
+    "cartNoItem": "No item in cart",
+    "home": "Home",
+    "wishList": "Wish list",
+    "relatedProduct": "Related product"
 }

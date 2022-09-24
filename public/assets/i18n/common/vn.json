@@ -75,5 +75,8 @@
     "outOf5": "trên 5",
     "orderSucceed": "Đặt hàng thành công",
     "autoHandleMessage": "Sau khi giao dịch thành công, đơn hàng của bạn sẽ được xử lý bới các nhân viên của chúng tôi",
-    "cartNoItem": "Không có sản phẩm nào trong giỏ hàng"
+    "cartNoItem": "Không có sản phẩm nào trong giỏ hàng",
+    "home": "Trang chủ",
+    "wishList": "Yêu thích",
+    "relatedProduct": "Sản phẩm liên quan"
 }
