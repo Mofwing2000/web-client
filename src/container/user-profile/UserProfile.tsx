@@ -127,6 +127,15 @@ const UserManagePanel = () => {
         });
     }, []);
 
+    const handlePasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setUserFormValue((prev) => {
+            return {
+                ...prev,
+                password: e.target.value,
+            };
+        });
+    }, []);
+
     const uploadAvatar = async () => {
         if (avatar) {
             setIsLoading(true);
@@ -217,9 +226,10 @@ const UserManagePanel = () => {
                                     id="password"
                                     // defaultValue={user.password}
                                     value={userFormValue.password}
-                                    disabled
                                     aria-describedby="password"
-                                    {...register('password')}
+                                    {...register('password', {
+                                        onChange: handlePasswordChange,
+                                    })}
                                     placeholder="8 characters at least"
                                 />
                                 <p>{errors.password?.message}</p>
